@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.blogserver.mapper.AnswerMapper">
+  <resultMap id="BaseResultMap" type="com.sf.blogserver.bean.Answer">
+    <id column="answer_id" jdbcType="INTEGER" property="answerId" />
+    <result column="mdContent" jdbcType="VARCHAR" property="mdcontent" />
+    <result column="htmlContent" jdbcType="VARCHAR" property="htmlcontent" />
+    <result column="issue_id" jdbcType="INTEGER" property="issueId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="publishDate" jdbcType="TIMESTAMP" property="publishdate" />
+    <result column="answer_state" jdbcType="INTEGER" property="answerState" />
+    <result column="answer_likes" jdbcType="INTEGER" property="answerLikes" />
+    <result column="answer_comments" jdbcType="INTEGER" property="answerComments" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    answer_id, mdContent, htmlContent, issue_id, user_id, publishDate, answer_state, 
+    answer_likes, answer_comments
+  </sql>
+  <select id="selectByExample" parameterType="com.sf.blogserver.bean.AnswerExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from answer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from answer
+    where answer_id = #{answerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from answer
+    where answer_id = #{answerId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sf.blogserver.bean.Answer">
+    insert into answer (answer_id, mdContent, htmlContent, 
+      issue_id, user_id, publishDate, 
+      answer_state, answer_likes, answer_comments
+      )
+    values (#{answerId,jdbcType=INTEGER}, #{mdcontent,jdbcType=VARCHAR}, #{htmlcontent,jdbcType=VARCHAR}, 
+      #{issueId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{publishdate,jdbcType=TIMESTAMP}, 
+      #{answerState,jdbcType=INTEGER}, #{answerLikes,jdbcType=INTEGER}, #{answerComments,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Answer">
+    insert into answer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="answerId != null">
+        answer_id,
+      </if>
+      <if test="mdcontent != null">
+        mdContent,
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent,
+      </if>
+      <if test="issueId != null">
+        issue_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="publishdate != null">
+        publishDate,
+      </if>
+      <if test="answerState != null">
+        answer_state,
+      </if>
+      <if test="answerLikes != null">
+        answer_likes,
+      </if>
+      <if test="answerComments != null">
+        answer_comments,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="answerId != null">
+        #{answerId,jdbcType=INTEGER},
+      </if>
+      <if test="mdcontent != null">
+        #{mdcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        #{htmlcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="issueId != null">
+        #{issueId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="answerState != null">
+        #{answerState,jdbcType=INTEGER},
+      </if>
+      <if test="answerLikes != null">
+        #{answerLikes,jdbcType=INTEGER},
+      </if>
+      <if test="answerComments != null">
+        #{answerComments,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.bean.Answer">
+    update answer
+    <set>
+      <if test="mdcontent != null">
+        mdContent = #{mdcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent = #{htmlcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="issueId != null">
+        issue_id = #{issueId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="answerState != null">
+        answer_state = #{answerState,jdbcType=INTEGER},
+      </if>
+      <if test="answerLikes != null">
+        answer_likes = #{answerLikes,jdbcType=INTEGER},
+      </if>
+      <if test="answerComments != null">
+        answer_comments = #{answerComments,jdbcType=INTEGER},
+      </if>
+    </set>
+    where answer_id = #{answerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sf.blogserver.bean.Answer">
+    update answer
+    set mdContent = #{mdcontent,jdbcType=VARCHAR},
+      htmlContent = #{htmlcontent,jdbcType=VARCHAR},
+      issue_id = #{issueId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      answer_state = #{answerState,jdbcType=INTEGER},
+      answer_likes = #{answerLikes,jdbcType=INTEGER},
+      answer_comments = #{answerComments,jdbcType=INTEGER}
+    where answer_id = #{answerId,jdbcType=INTEGER}
+  </update>
+</mapper>
