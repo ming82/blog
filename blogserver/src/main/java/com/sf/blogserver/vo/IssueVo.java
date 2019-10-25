@@ -1,24 +1,24 @@
 package com.sf.blogserver.vo;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class IssueVo {
     private Integer issueId;
 
     private String issueTitle;
 
-    private String userName;
+    private Integer userId;
+
+    private String userNickname;
 
     private Date publishdate;
-
-    private Integer issuePageview;
 
     private Integer issueAnswers;
 }

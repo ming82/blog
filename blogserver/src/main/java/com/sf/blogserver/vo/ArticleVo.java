@@ -1,15 +1,15 @@
 package com.sf.blogserver.vo;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ArticleVo {
     private Integer articleId;
 
@@ -25,9 +25,7 @@ public class ArticleVo {
 
     private Integer articleComments;
 
-    private Integer userId;
-
-    private String userName;
+    private String userNickname;
 
     private List<String> tags;
 }
