@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.blogserver.mapper.IssueMapper">
+  <resultMap id="BaseResultMap" type="com.sf.blogserver.bean.Issue">
+    <id column="issue_id" jdbcType="INTEGER" property="issueId" />
+    <result column="issue_title" jdbcType="VARCHAR" property="issueTitle" />
+    <result column="mdContent" jdbcType="VARCHAR" property="mdcontent" />
+    <result column="htmlContent" jdbcType="VARCHAR" property="htmlcontent" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="publishDate" jdbcType="TIMESTAMP" property="publishdate" />
+    <result column="issue_status" jdbcType="INTEGER" property="issueStatus" />
+    <result column="issue_answers" jdbcType="INTEGER" property="issueAnswers" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    issue_id, issue_title, mdContent, htmlContent, category_id, user_id, publishDate,
+    issue_status, issue_answers
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from issue
+    where issue_id = #{issueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from issue
+    where issue_status > 0
+  </select>
+  <select id="selectByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from issue
+    where category_id = #{categoryId,jdbcType=INTEGER} and issue_status > 0
+  </select>
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from issue
+    where user_id = #{userId,jdbcType=INTEGER} and issue_status > 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from issue
+    where issue_id = #{issueId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sf.blogserver.bean.Issue">
+    insert into issue (issue_id, issue_title, mdContent,
+      htmlContent, category_id, user_id,
+      publishDate, issue_status, issue_answers
+      )
+    values (#{issueId,jdbcType=INTEGER}, #{issueTitle,jdbcType=VARCHAR}, #{mdcontent,jdbcType=VARCHAR},
+      #{htmlcontent,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+      #{publishdate,jdbcType=TIMESTAMP}, #{issueStatus,jdbcType=INTEGER}, #{issueAnswers,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Issue">
+    insert into issue
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="issueId != null">
+        issue_id,
+      </if>
+      <if test="issueTitle != null">
+        issue_title,
+      </if>
+      <if test="mdcontent != null">
+        mdContent,
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="publishdate != null">
+        publishDate,
+      </if>
+      <if test="issueStatus != null">
+        issue_status,
+      </if>
+      <if test="issueAnswers != null">
+        issue_answers,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="issueId != null">
+        #{issueId,jdbcType=INTEGER},
+      </if>
+      <if test="issueTitle != null">
+        #{issueTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mdcontent != null">
+        #{mdcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        #{htmlcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issueStatus != null">
+        #{issueStatus,jdbcType=INTEGER},
+      </if>
+      <if test="issueAnswers != null">
+        #{issueAnswers,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.bean.Issue">
+    update issue
+    <set>
+      <if test="issueTitle != null">
+        issue_title = #{issueTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mdcontent != null">
+        mdContent = #{mdcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent = #{htmlcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issueStatus != null">
+        issue_status = #{issueStatus,jdbcType=INTEGER},
+      </if>
+      <if test="issueAnswers != null">
+        issue_answers = #{issueAnswers,jdbcType=INTEGER},
+      </if>
+    </set>
+    where issue_id = #{issueId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sf.blogserver.bean.Issue">
+    update issue
+    set issue_title = #{issueTitle,jdbcType=VARCHAR},
+      mdContent = #{mdcontent,jdbcType=VARCHAR},
+      htmlContent = #{htmlcontent,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      issue_status = #{issueStatus,jdbcType=INTEGER},
+      issue_answers = #{issueAnswers,jdbcType=INTEGER}
+    where issue_id = #{issueId,jdbcType=INTEGER}
+  </update>
+</mapper>

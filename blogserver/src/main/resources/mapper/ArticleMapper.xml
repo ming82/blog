@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sf.blogserver.mapper.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.sf.blogserver.bean.Article">
+    <id column="article_id" jdbcType="INTEGER" property="articleId" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="mdContent" jdbcType="VARCHAR" property="mdcontent" />
+    <result column="htmlContent" jdbcType="VARCHAR" property="htmlcontent" />
+    <result column="article_summary" jdbcType="VARCHAR" property="articleSummary" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="publishDate" jdbcType="TIMESTAMP" property="publishdate" />
+    <result column="editTime" jdbcType="TIMESTAMP" property="edittime" />
+    <result column="article_status" jdbcType="INTEGER" property="articleStatus" />
+    <result column="article_pageviews" jdbcType="INTEGER" property="articlePageviews" />
+    <result column="article_likes" jdbcType="INTEGER" property="articleLikes" />
+    <result column="article_comments" jdbcType="INTEGER" property="articleComments" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    article_id, article_title, mdContent, htmlContent, article_summary, category_id,
+    user_id, publishDate, editTime, article_status, article_pageviews, article_likes,
+    article_comments
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status > 0 and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCategoryId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1 and category_id = #{categoryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from article
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sf.blogserver.bean.Article">
+    insert into article (article_id, article_title, mdContent,
+      htmlContent, article_summary, category_id,
+      user_id, publishDate, editTime,
+      article_status, article_pageviews, article_likes,
+      article_comments)
+    values (#{articleId,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, #{mdcontent,jdbcType=VARCHAR},
+      #{htmlcontent,jdbcType=VARCHAR}, #{articleSummary,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER}, #{publishdate,jdbcType=TIMESTAMP}, #{edittime,jdbcType=TIMESTAMP},
+      #{articleStatus,jdbcType=INTEGER}, #{articlePageviews,jdbcType=INTEGER}, #{articleLikes,jdbcType=INTEGER},
+      #{articleComments,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Article">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="mdcontent != null">
+        mdContent,
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent,
+      </if>
+      <if test="articleSummary != null">
+        article_summary,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="publishdate != null">
+        publishDate,
+      </if>
+      <if test="edittime != null">
+        editTime,
+      </if>
+      <if test="articleStatus != null">
+        article_status,
+      </if>
+      <if test="articlePageviews != null">
+        article_pageviews,
+      </if>
+      <if test="articleLikes != null">
+        article_likes,
+      </if>
+      <if test="articleComments != null">
+        article_comments,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mdcontent != null">
+        #{mdcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        #{htmlcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="articleSummary != null">
+        #{articleSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="edittime != null">
+        #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleStatus != null">
+        #{articleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="articlePageviews != null">
+        #{articlePageviews,jdbcType=INTEGER},
+      </if>
+      <if test="articleLikes != null">
+        #{articleLikes,jdbcType=INTEGER},
+      </if>
+      <if test="articleComments != null">
+        #{articleComments,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.bean.Article">
+    update article
+    <set>
+      <if test="articleTitle != null">
+        article_title = #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mdcontent != null">
+        mdContent = #{mdcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent = #{htmlcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="articleSummary != null">
+        article_summary = #{articleSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="edittime != null">
+        editTime = #{edittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleStatus != null">
+        article_status = #{articleStatus,jdbcType=INTEGER},
+      </if>
+      <if test="articlePageviews != null">
+        article_pageviews = #{articlePageviews,jdbcType=INTEGER},
+      </if>
+      <if test="articleLikes != null">
+        article_likes = #{articleLikes,jdbcType=INTEGER},
+      </if>
+      <if test="articleComments != null">
+        article_comments = #{articleComments,jdbcType=INTEGER},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sf.blogserver.bean.Article">
+    update article
+    set article_title = #{articleTitle,jdbcType=VARCHAR},
+      mdContent = #{mdcontent,jdbcType=VARCHAR},
+      htmlContent = #{htmlcontent,jdbcType=VARCHAR},
+      article_summary = #{articleSummary,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      editTime = #{edittime,jdbcType=TIMESTAMP},
+      article_status = #{articleStatus,jdbcType=INTEGER},
+      article_pageviews = #{articlePageviews,jdbcType=INTEGER},
+      article_likes = #{articleLikes,jdbcType=INTEGER},
+      article_comments = #{articleComments,jdbcType=INTEGER}
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+</mapper>
