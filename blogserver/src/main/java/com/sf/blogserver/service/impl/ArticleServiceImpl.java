@@ -23,7 +23,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> selectAllArticle() {
-        return articleMapper.selectByExample(null);
+
+        return articleMapper.selectAll();
     }
 
     @Override
@@ -33,17 +34,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void addNewArticle(Article article) {
-        articleMapper.insert(article);
+    public int addNewArticle(Article article) {
+        return articleMapper.insert(article);
     }
 
     @Override
-    public void updateArticle(Article article) {
-        articleMapper.updateByPrimaryKey(article);
+    public int updateArticle(Article article) {
+        return articleMapper.updateByPrimaryKey(article);
     }
 
     @Override
     public int deleteArticle(Integer articleId) {
+
         return articleMapper.deleteByPrimaryKey(articleId);
     }
 }
