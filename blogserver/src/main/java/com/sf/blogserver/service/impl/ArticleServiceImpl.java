@@ -2,10 +2,15 @@ package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Article;
 import com.sf.blogserver.mapper.ArticleMapper;
+import com.sf.blogserver.mapper.ArticleTagMapper;
+import com.sf.blogserver.mapper.TagMapper;
+import com.sf.blogserver.mapper.UserMapper;
 import com.sf.blogserver.service.ArticleService;
+import com.sf.blogserver.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +26,42 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     ArticleMapper articleMapper;
 
-    @Override
-    public List<Article> selectAllArticle() {
+    @Autowired
+    UserMapper userMapper;
 
-        return articleMapper.selectAll();
+    @Autowired
+    ArticleTagMapper articleTagMapper;
+
+    @Autowired
+    TagMapper tagMapper;
+    @Override
+    public List<ArticleVo> selectAllArticle() {
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.selectAll()){
+            ArticleVo articleVo = new ArticleVo();
+            //注入已有属性
+            articleVo.setArticleId(article.getArticleId());
+            articleVo.setArticleTitle(article.getArticleTitle());
+            articleVo.setArticleComments(article.getArticleComments());
+            articleVo.setArticleLikes(article.getArticleLikes());
+            articleVo.setArticlePageviews(article.getArticlePageviews());
+            articleVo.setArticleSummary(article.getArticleSummary());
+            articleVo.setPublishdate(article.getPublishdate());
+            //获取用户昵称
+            articleVo.setUserNickname(userMapper.selectByPrimaryKey(article.getUserId()).getUserNickname());
+            //获取文章标签
+            List<String> tags = new ArrayList<>();
+            List<Integer> tagIds = articleTagMapper.selectTagIdByArticleId(article.getArticleId());
+            for (int tagId:tagIds){
+                tags.add(tagMapper.selectByPrimaryKey(tagId).getTagName());
+            }
+            articleVo.setTags(tags);
+
+
+            articleVos.add(articleVo);
+        }
+
+        return articleVos;
     }
 
     @Override

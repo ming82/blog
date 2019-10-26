@@ -15,7 +15,7 @@
     from article_tag
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectTagIdByArticleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectTagIdByArticleId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     select
     tag_id
     from article_tag
