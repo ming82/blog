@@ -6,5 +6,16 @@ import com.sf.blogserver.bean.Article;
 import java.util.List;
 
 public interface ArticleService {
-    List<Article> getArticleById(Integer articleId);
+    List<Article> selectAllArticle();
+    Article selectArticleByPrimaryKey(Integer articleId);
+    void addNewArticle(Article article);
+    void updateArticle(Article article);
+    int deleteArticle(Integer articleId);
+
+
+
+
+
+
+
 }
