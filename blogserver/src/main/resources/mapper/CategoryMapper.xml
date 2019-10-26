@@ -6,7 +6,7 @@
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
   </resultMap>
   <sql id="Base_Column_List">
-    category_id, category_name
+    category_id, category_name,category_articles
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -36,6 +36,9 @@
       <if test="categoryName != null">
         category_name,
       </if>
+      <if test="categoryArticles != null">
+        category_articles,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="categoryId != null">
@@ -43,6 +46,9 @@
       </if>
       <if test="categoryName != null">
         #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryArticles != null">
+        #{categoryArticles,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -52,12 +58,15 @@
       <if test="categoryName != null">
         category_name = #{categoryName,jdbcType=VARCHAR},
       </if>
+      <if test="categoryArticles != null">
+        category_articles = #{categoryArticles,jdbcType=INTEGER},
+      </if>
     </set>
     where category_id = #{categoryId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sf.blogserver.bean.Category">
     update category
-    set category_name = #{categoryName,jdbcType=VARCHAR}
+    set category_name = #{categoryName,jdbcType=VARCHAR},category_articles = #{categoryArticles}
     where category_id = #{categoryId,jdbcType=INTEGER}
   </update>
 </mapper>

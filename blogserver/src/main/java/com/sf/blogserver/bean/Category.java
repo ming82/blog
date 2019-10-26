@@ -5,6 +5,8 @@ public class Category {
 
     private String categoryName;
 
+    private Integer categoryArticles;
+
     public Integer getCategoryId() {
         return categoryId;
     }
@@ -19,5 +21,13 @@ public class Category {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName == null ? null : categoryName.trim();
+    }
+
+    public Integer getCategoryArticles() {
+        return categoryArticles;
+    }
+
+    public void setCategoryArticles(Integer categoryArticles) {
+        this.categoryArticles = categoryArticles;
     }
 }
