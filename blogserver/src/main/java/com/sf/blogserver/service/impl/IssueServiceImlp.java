@@ -60,12 +60,6 @@ public class IssueServiceImlp implements IssueService {
     }
 
     @Override
-    public int updateIssue(Issue issue) {
-
-        return issueMapper.updateByPrimaryKey(issue);
-    }
-
-    @Override
     public int deleteIssue(Integer issueId) {
         return issueMapper.deleteByPrimaryKey(issueId);
     }

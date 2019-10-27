@@ -4,6 +4,7 @@ import com.sf.blogserver.bean.Article;
 import com.sf.blogserver.service.ArticleService;
 import com.sf.blogserver.service.CommentService;
 import com.sf.blogserver.util.ResponceUtil;
+import com.sf.blogserver.vo.ArticleVo;
 import com.sf.blogserver.vo.CommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,11 @@ public class ArticleController {
     public List<CommentVo> test(){
         return commentService.getCommentByArticleId(1);
 
+    }
+
+    @GetMapping("/selectAllArticle")
+    public List<ArticleVo> selectAllArticle(){
+        return articleService.selectAllArticle();
     }
 
     @PostMapping("/addNewArticle")

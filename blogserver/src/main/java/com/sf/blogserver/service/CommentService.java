@@ -1,5 +1,6 @@
 package com.sf.blogserver.service;
 
+import com.sf.blogserver.bean.Comment;
 import com.sf.blogserver.vo.CommentVo;
 
 import java.util.List;
@@ -7,4 +8,8 @@ import java.util.List;
 public interface CommentService {
 
     List<CommentVo> getCommentByArticleId(Integer articleId);
+
+    int deleteComment(Comment comment);
+
+    int addNewComment(Comment comment);
 }

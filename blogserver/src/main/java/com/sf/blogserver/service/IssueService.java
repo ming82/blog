@@ -12,7 +12,5 @@ public interface IssueService {
 
     public int addNewIssue(Issue issue);
 
-    public int updateIssue(Issue issue);
-
     public int deleteIssue(Integer issueId);
 }

@@ -54,4 +54,14 @@ public class CommentServiceImpl implements CommentService {
         }
         return commentVos;
     }
+
+    @Override
+    public int deleteComment(Comment comment) {
+        return commentMapper.deleteByPrimaryKey(comment.getCommentId());
+    }
+
+    @Override
+    public int addNewComment(Comment comment) {
+        return commentMapper.insertSelective(comment);
+    }
 }
