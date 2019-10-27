@@ -14,6 +14,11 @@
     from tag
     where tag_id = #{tagId,jdbcType=INTEGER}
   </select>
+  <select id="selectAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from tag
+</select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tag
     where tag_id = #{tagId,jdbcType=INTEGER}

@@ -31,7 +31,7 @@ public class CommentController {
     @PostMapping("/deleteComment")
     public ResponceUtil deleteComment(Comment comment){
         int result = commentService.deleteComment(comment);
-        if (result == 0) {
+        if (result == 1) {
             return ResponceUtil.success("评论删除成功",null);
         } else {
             return ResponceUtil.fail("评论删除失败");

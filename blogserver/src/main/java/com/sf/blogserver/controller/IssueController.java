@@ -41,7 +41,7 @@ public class IssueController {
     @PostMapping("/deleteIssue")
     public ResponceUtil deleteIssue(Integer issueId){
         int result = issueService.deleteIssue(issueId);
-        if (result == 0) {
+        if (result == 1) {
             return ResponceUtil.success("问题删除成功",null);
         } else {
             return ResponceUtil.fail("问题删除失败");

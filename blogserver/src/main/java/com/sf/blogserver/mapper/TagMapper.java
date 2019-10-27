@@ -2,6 +2,8 @@ package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Tag;
 
+import java.util.List;
+
 public interface TagMapper {
     int deleteByPrimaryKey(Integer tagId);
 
@@ -10,6 +12,8 @@ public interface TagMapper {
     int insertSelective(Tag record);
 
     Tag selectByPrimaryKey(Integer tagId);
+
+    List<Tag> selectAll();
 
     int updateByPrimaryKeySelective(Tag record);
 
