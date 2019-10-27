@@ -8,11 +8,11 @@ import java.util.List;
 public interface IssueService {
     public List<IssueVo> selectAllIssue();
 
-    public IssueVo selectIssueByPrimaryKey(Integer issueId);
+    public Issue selectIssueByPrimaryKey(Integer issueId);
 
     public int addNewIssue(Issue issue);
 
     public int updateIssue(Issue issue);
 
-    public int deleteIssue(Issue issue);
+    public int deleteIssue(Integer issueId);
 }

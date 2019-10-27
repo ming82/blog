@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,23 +48,25 @@ public class IssueServiceImlp implements IssueService {
     }
 
     @Override
-    public IssueVo selectIssueByPrimaryKey(Integer issueId) {
+    public Issue selectIssueByPrimaryKey(Integer issueId) {
 
-        return null;
+        return issueMapper.selectByPrimaryKey(issueId);
     }
 
     @Override
     public int addNewIssue(Issue issue) {
-        return 0;
+        issue.setPublishdate(new Date());
+        return issueMapper.insertSelective(issue);
     }
 
     @Override
     public int updateIssue(Issue issue) {
-        return 0;
+
+        return issueMapper.updateByPrimaryKey(issue);
     }
 
     @Override
-    public int deleteIssue(Issue issue) {
-        return 0;
+    public int deleteIssue(Integer issueId) {
+        return issueMapper.deleteByPrimaryKey(issueId);
     }
 }

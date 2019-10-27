@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -72,7 +73,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public int addNewArticle(Article article) {
-        return articleMapper.insert(article);
+        article.setPublishdate(new Date());
+        //截取文章
+        String stripHtml = article.getMdcontent();
+        article.setArticleSummary(stripHtml.substring(0, stripHtml.length() > 50 ? 50 : stripHtml.length()));
+        return articleMapper.insertSelective(article);
     }
 
     @Override
