@@ -24,7 +24,6 @@ public class ArticleController {
     @GetMapping("/test")
     public List<CommentVo> test(){
         return commentService.getCommentByArticleId(1);
-
     }
 
     @GetMapping("/selectAllArticle")

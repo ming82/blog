@@ -20,6 +20,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     UserMapper userMapper;
+
     @Override
     public List<CommentVo> getCommentByArticleId(Integer articleId) {
         List<CommentVo> commentVos = new ArrayList<>();//返回给界面的评论集合

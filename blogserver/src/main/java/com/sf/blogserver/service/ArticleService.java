@@ -9,6 +9,8 @@ import java.util.List;
 public interface ArticleService {
     List<ArticleVo> selectAllArticle();
 
+    List<Article> selectArticlesByCategoryId(Integer categoryId);
+
     Article selectArticleByPrimaryKey(Integer articleId);
 
     int addNewArticle(Article article);

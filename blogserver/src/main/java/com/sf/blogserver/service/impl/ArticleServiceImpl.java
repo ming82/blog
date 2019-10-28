@@ -1,10 +1,7 @@
 package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Article;
-import com.sf.blogserver.mapper.ArticleMapper;
-import com.sf.blogserver.mapper.ArticleTagMapper;
-import com.sf.blogserver.mapper.TagMapper;
-import com.sf.blogserver.mapper.UserMapper;
+import com.sf.blogserver.mapper.*;
 import com.sf.blogserver.service.ArticleService;
 import com.sf.blogserver.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,10 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     TagMapper tagMapper;
+
+    @Deprecated
+    CategoryMapper categoryMapper;
+
     @Override
     public List<ArticleVo> selectAllArticle() {
         List<ArticleVo> articleVos = new ArrayList<>();
@@ -63,6 +64,12 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return articleVos;
+    }
+
+    @Override
+    public List<Article> selectArticlesByCategoryId(Integer categoryId) {
+
+        return articleMapper.selectByCategoryId(categoryId);
     }
 
     @Override
