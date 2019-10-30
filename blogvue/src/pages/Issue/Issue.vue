@@ -1,0 +1,90 @@
+<template>
+  <el-container style="min-height:710px;*+height:100%;_height:400px;">
+    <el-header>
+      <HeaderTop>
+        <div class="login" slot="isLogin" v-if="isLogin">
+          <el-button>个人空间 <el-badge class="mark" :value="12" /></el-button>
+        </div>
+        <div class="unlogin" slot="isLogin" v-else>
+          <el-button>登录</el-button>
+          <span>|</span>
+          <el-button>免费注册</el-button>
+        </div>
+      </HeaderTop>
+    </el-header>
+    <el-container style="background-color: aliceblue;">
+      <el-aside width="200px">
+        <AuthorMessage></AuthorMessage>
+        <br>
+        <SideGuide tag="文章分类"></SideGuide>
+      </el-aside>
+      <el-main class="mainwidth">
+        <IssueDetail></IssueDetail>
+        <Answers></Answers>
+        <div class="shadow">
+          <Comments style="margin-left: 30px"></Comments>
+        </div>
+        <Answers></Answers>
+        <div class="shadow">
+          <Comments style="margin-left: 30px"></Comments>
+        </div>
+        <br/>
+        <Answer></Answer>
+      </el-main>
+    </el-container>
+    <el-footer>
+      <Footer></Footer>
+    </el-footer>
+  </el-container>
+</template>
+
+<script>
+  import AuthorInfo from "../../components/AuthorInfo/AuthorInfo";
+  import HeaderTop from "../../components/HeaderTop/HeaderTop";
+  import Footer from "../../components/Footer/Footer";
+  import SideGuide from "../../components/SideGuide/SideGuide";
+  import Comments from "../../components/Comments/Comments";
+  import IssueDetail from "../../components/IssueDetail/IssueDetail";
+  import Answers from "../../components/Answers/Answers";
+  import Answer from "../../components/Answer/Answer";
+  export default {
+    data() {
+      return {
+        isLogin: false,
+      }
+    },
+    name: "Issue",
+    components: {Answer, Answers, IssueDetail, Comments, Footer, HeaderTop, AuthorInfo,SideGuide}
+  }
+</script>
+
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+  .mainwidth
+    margin-right 130px
+  .shadow
+    background-color #fdfdfd
+    box-shadow 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+
+  .el-footer
+    margin-top 10px
+    margin-bottom 20px
+
+  .el-aside
+    margin-left 150px
+    margin-top 40px
+    margin-bottom 5px
+  .el-main
+    margin-top 20px
+    margin-bottom 5px
+
+  .el-button
+    border 0px
+
+  .login
+    margin-top 15px
+    margin-left 430px
+
+  .unlogin
+    margin-top 10px
+    margin-left 350px
+</style>
