@@ -33,6 +33,19 @@
     from article
     where article_status = 1
   </select>
+  <select id="getHotArticles" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1 and article_likes > 10
+  </select>
+  <select id="getNewArticles" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1
+    order by  publishDate desc)  as total limit 0,8
+  </select>
   <select id="selectByUserId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -202,6 +215,26 @@
       article_pageviews = #{articlePageviews,jdbcType=INTEGER},
       article_likes = #{articleLikes,jdbcType=INTEGER},
       article_comments = #{articleComments,jdbcType=INTEGER}
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateToDelete" parameterType="java.lang.Integer">
+    update article
+    set article_status = 0
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="increaseComment" parameterType="java.lang.Integer">
+    update article
+    set article_comments = article_comments +'1'
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="increaseLike" parameterType="java.lang.Integer">
+    update article
+    set article_likes = article_likes +'1'
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="increasePageviews" parameterType="java.lang.Integer">
+    update article
+    set article_pageviews = article_pageviews +'1'
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
 </mapper>

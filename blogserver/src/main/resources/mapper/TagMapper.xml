@@ -9,7 +9,7 @@
     tag_id, tag_name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from tag
     where tag_id = #{tagId,jdbcType=INTEGER}
@@ -23,11 +23,11 @@
     delete from tag
     where tag_id = #{tagId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.blogserver.bean.Tag">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="tagId" parameterType="com.sf.blogserver.bean.Tag">
     insert into tag (tag_id, tag_name)
     values (#{tagId,jdbcType=INTEGER}, #{tagName,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Tag">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="tagId" parameterType="com.sf.blogserver.bean.Tag">
     insert into tag
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="tagId != null">

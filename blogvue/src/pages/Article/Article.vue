@@ -14,7 +14,7 @@
     </el-header>
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px">
-        <AuthorMessage></AuthorMessage>
+        <AuthorInfo></AuthorInfo>
         <br>
         <SideGuide tag="文章分类"></SideGuide>
       </el-aside>

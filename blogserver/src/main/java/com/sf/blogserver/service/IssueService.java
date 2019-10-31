@@ -8,7 +8,9 @@ import java.util.List;
 public interface IssueService {
     public List<IssueVo> selectAllIssue();
 
-    public Issue selectIssueByPrimaryKey(Integer issueId);
+    public Issue selectIssueById(Integer issueId);
+
+    public List<IssueVo> getIssuesByUserId(Integer userId);
 
     public int addNewIssue(Issue issue);
 

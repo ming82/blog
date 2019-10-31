@@ -1,12 +1,12 @@
 package com.sf.blogserver.service;
 
-import com.sf.blogserver.bean.Message;
+import com.sf.blogserver.vo.MessageVo;
 
 import java.util.List;
 
 public interface MessageService {
 
-    List<Message> selectByUserId(Integer userId);
+    List<MessageVo> getAllByUserId(Integer userId);
 
-    int deleteByPrimaryKey(Integer messageId);
+    List<MessageVo> getNoreadByUserId(Integer userId);
 }

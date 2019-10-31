@@ -1,61 +1,80 @@
 package com.sf.blogserver.controller;
 
 import com.sf.blogserver.bean.Article;
+import com.sf.blogserver.bean.Tag;
 import com.sf.blogserver.service.ArticleService;
-import com.sf.blogserver.service.CommentService;
 import com.sf.blogserver.util.ResponceUtil;
-import com.sf.blogserver.vo.ArticleVo;
-import com.sf.blogserver.vo.CommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author 92802
+ * @date 2019/10/31
+ */
 @RestController
+@RequestMapping("/article")
 public class ArticleController {
 
     @Autowired
     ArticleService articleService;
-    @Autowired
-    CommentService commentService;
 
-    @GetMapping("/test")
-    public List<CommentVo> test(){
-        return commentService.getCommentByArticleId(1);
+    @GetMapping("/getAll")
+    public ResponceUtil getAllArticles(){
+        return ResponceUtil.success("查询成功",articleService.getAllArticle());
     }
 
-    @GetMapping("/selectAllArticle")
-    public List<ArticleVo> selectAllArticle(){
-        return articleService.selectAllArticle();
+    @GetMapping("/getHots")
+    public ResponceUtil getHotArticles(){
+        return ResponceUtil.success("查询成功",articleService.getHotArticles());
     }
 
-    @PostMapping("/addNewArticle")
-    public ResponceUtil addNewArticle(Article article){
-        int result = articleService.addNewArticle(article);
+    @GetMapping("/getNews")
+    public ResponceUtil getNewArticles(){
+        return ResponceUtil.success("查询成功",articleService.getNewArticles());
+    }
+
+    @GetMapping("/getByCategoryId")
+    public ResponceUtil getArticlesByCategoryId(@PathVariable Integer categoryId){
+        return ResponceUtil.success("查询成功",articleService.getArticlesByCategoryId(categoryId));
+    }
+
+    @GetMapping("/getByUserId")
+    public ResponceUtil getArticlesByUserId(@PathVariable Integer userId){
+        return ResponceUtil.success("查询成功",articleService.getArticlesByUserId(userId));
+    }
+
+    @GetMapping("/{articleId}")
+    public ResponceUtil getArticleById(@PathVariable Integer articleId){
+        return ResponceUtil.success("查询成功", articleService.getArticleById(articleId));
+    }
+
+    @PostMapping("/")
+    public ResponceUtil addNewArticle(Article article, List<Tag> oldTags,List<String> newTags){
+        int result = articleService.addNewArticle(article,oldTags,newTags);
         if (result == 1) {
-            return ResponceUtil.success("文章发表成功",null);
+            return ResponceUtil.success("文章发表成功");
         } else {
             return ResponceUtil.fail("文章发表失败");
         }
     }
 
-    @PostMapping("/updateArticle")
-    public ResponceUtil updateArticle(Article article){
+    @PutMapping("/")
+    public ResponceUtil editArticle(Article article){
         int result = articleService.updateArticle(article);
         if (result == 1) {
-            return ResponceUtil.success("文章更新成功",null);
+            return ResponceUtil.success("文章更新成功");
         } else {
             return ResponceUtil.fail("文章更新失败");
         }
     }
 
-    @PostMapping("/deleteArticle")
+    @DeleteMapping("/{articleId}")
     public ResponceUtil deleteArticle(Integer articleId){
         int result = articleService.deleteArticle(articleId);
         if (result == 1) {
-            return ResponceUtil.success("文章删除成功",null);
+            return ResponceUtil.success("文章删除成功");
         } else {
             return ResponceUtil.fail("文章删除失败");
         }

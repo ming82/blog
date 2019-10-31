@@ -14,11 +14,15 @@ public class ResponceUtil {
 
     ResponceUtil(String status,String resMsg){
         this.status = status;
-        this.status = resMsg;
+        this.resMsg = resMsg;
     }
 
     public static ResponceUtil success(String resMsg,Object obj){
         return new ResponceUtil("200",resMsg,obj);
+    }
+
+    public static ResponceUtil success(String resMsg){
+        return new ResponceUtil("200",resMsg);
     }
 
     public static ResponceUtil fail(String resMsg){

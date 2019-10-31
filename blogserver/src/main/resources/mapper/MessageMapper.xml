@@ -19,7 +19,13 @@
     from message
     where message_id = #{messageId,jdbcType=INTEGER}
   </select>
-  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectAllByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from message
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectNoreadByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from message

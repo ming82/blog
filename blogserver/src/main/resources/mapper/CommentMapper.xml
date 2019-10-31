@@ -144,4 +144,9 @@
       user_id = #{userId,jdbcType=INTEGER}
     where comment_id = #{commentId,jdbcType=INTEGER}
   </update>
+  <update id="updateToDelete" parameterType="java.lang.Integer">
+    update comment
+    set comment_status = 0
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
 </mapper>

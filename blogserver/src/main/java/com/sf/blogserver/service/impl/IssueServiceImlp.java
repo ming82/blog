@@ -30,8 +30,39 @@ public class IssueServiceImlp implements IssueService {
 
     @Override
     public List<IssueVo> selectAllIssue() {
+       return IssueToVo(issueMapper.selectAll());
+    }
+
+    @Override
+    public Issue selectIssueById(Integer issueId) {
+
+        return issueMapper.selectByPrimaryKey(issueId);
+    }
+
+    @Override
+    public List<IssueVo> getIssuesByUserId(Integer userId) {
+        return IssueToVo(issueMapper.selectByUserId(userId));
+    }
+
+    @Override
+    public int addNewIssue(Issue issue) {
+        issue.setPublishdate(new Date());
+        return issueMapper.insertSelective(issue);
+    }
+
+    @Override
+    public int deleteIssue(Integer issueId) {
+        return issueMapper.updateToDelete(issueId);
+    }
+
+    /**
+     * 将issue转为issueVo
+     * @param issues
+     * @return
+     */
+    List<IssueVo> IssueToVo(List<Issue> issues){
         List<IssueVo> issueVos=new ArrayList<>();
-        for (Issue issue :issueMapper.selectAll()) {
+        for (Issue issue :issues) {
             //注入已有属性
             IssueVo issueVo=new IssueVo();
             issueVo.setIssueId(issue.getIssueId());
@@ -45,22 +76,5 @@ public class IssueServiceImlp implements IssueService {
             issueVos.add(issueVo);
         }
         return issueVos;
-    }
-
-    @Override
-    public Issue selectIssueByPrimaryKey(Integer issueId) {
-
-        return issueMapper.selectByPrimaryKey(issueId);
-    }
-
-    @Override
-    public int addNewIssue(Issue issue) {
-        issue.setPublishdate(new Date());
-        return issueMapper.insertSelective(issue);
-    }
-
-    @Override
-    public int deleteIssue(Integer issueId) {
-        return issueMapper.deleteByPrimaryKey(issueId);
     }
 }

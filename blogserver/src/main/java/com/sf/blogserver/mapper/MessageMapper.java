@@ -13,7 +13,9 @@ public interface MessageMapper {
 
     Message selectByPrimaryKey(Integer messageId);
 
-    List<Message> selectByUserId(Integer userId);
+    List<Message> selectAllByUserId(Integer userId);
+
+    List<Message> selectNoreadByUserId(Integer userId);
 
     int updateByPrimaryKeySelective(Message record);
 

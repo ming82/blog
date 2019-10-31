@@ -57,8 +57,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public int deleteComment(Comment comment) {
-        return commentMapper.deleteByPrimaryKey(comment.getCommentId());
+    public int deleteComment(Integer commentId) {
+        return commentMapper.updateToDelete(commentId);
     }
 
     @Override

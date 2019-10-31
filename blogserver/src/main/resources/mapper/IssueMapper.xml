@@ -157,4 +157,9 @@
       issue_answers = #{issueAnswers,jdbcType=INTEGER}
     where issue_id = #{issueId,jdbcType=INTEGER}
   </update>
+  <update id="updateToDelete" parameterType="java.lang.Integer">
+    update issue
+    set issue_status = 0
+    where issue_id = #{issueId,jdbcType=INTEGER}
+  </update>
 </mapper>

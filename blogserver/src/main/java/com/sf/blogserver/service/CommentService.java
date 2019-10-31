@@ -9,7 +9,7 @@ public interface CommentService {
 
     List<CommentVo> getCommentByArticleId(Integer articleId);
 
-    int deleteComment(Comment comment);
+    int deleteComment(Integer commentId);
 
     int addNewComment(Comment comment);
 }

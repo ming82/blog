@@ -2,22 +2,27 @@ package com.sf.blogserver.service;
 
 
 import com.sf.blogserver.bean.Article;
+import com.sf.blogserver.bean.Tag;
 import com.sf.blogserver.vo.ArticleVo;
 
 import java.util.List;
 
 public interface ArticleService {
-    List<ArticleVo> selectAllArticle();
+    List<ArticleVo> getAllArticle();
 
-    List<Article> selectArticlesByCategoryId(Integer categoryId);
+    List<ArticleVo> getArticlesByCategoryId(Integer categoryId);
 
-    Article selectArticleByPrimaryKey(Integer articleId);
+    List<ArticleVo> getHotArticles();
 
-    int addNewArticle(Article article);
+    List<ArticleVo> getNewArticles();
+
+    List<ArticleVo> getArticlesByUserId(Integer userId);
+
+    Article getArticleById(Integer articleId);
+
+    int addNewArticle(Article article, List<Tag> oldTags, List<String> newTags);
 
     int updateArticle(Article article);
 
     int deleteArticle(Integer articleId);
-
-
 }

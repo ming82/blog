@@ -22,4 +22,16 @@ public interface ArticleMapper {
     int updateByPrimaryKeySelective(Article record);
 
     int updateByPrimaryKey(Article record);
+
+    int updateToDelete(Integer articleId);
+
+    int increaseComment(Integer articleId);
+
+    int increaseLike(Integer articleId);
+
+    int increasePageview(Integer articleId);
+
+    List<Article> getHotArticles();
+
+    List<Article> getNewArticles();
 }

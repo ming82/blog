@@ -5,46 +5,54 @@ import com.sf.blogserver.service.IssueService;
 import com.sf.blogserver.util.ResponceUtil;
 import com.sf.blogserver.vo.IssueVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * @Discription
- * @auther Hh
+ * @author Hh
  * @package com.sf.blogserver.controller
  * @create 2019/10/27 16:30
  * @Version: 1.0
  */
 @RestController
+@RequestMapping("/issue")
 public class IssueController {
     @Autowired
     IssueService issueService;
 
-    @GetMapping("/selectAllIssue")
-    public List<IssueVo> selectAllIssue(){
-        return issueService.selectAllIssue();
+    @GetMapping("/getAll")
+    public ResponceUtil getAllIssue(){
+        return ResponceUtil.success("查询成功",issueService.selectAllIssue());
+    }
+    @GetMapping("/getByUserId")
+    public ResponceUtil getIssuesByUserId(Integer userId){
+        return ResponceUtil.success("查询成功",issueService.getIssuesByUserId(userId));
     }
 
-    @PostMapping("/addNewIssue")
+    @GetMapping("/{issueId}")
+    public ResponceUtil getIssueById(@PathVariable Integer issueId){
+        return ResponceUtil.success("查询成功",issueService.selectIssueById(issueId));
+    }
+
+    @PostMapping("/")
     public ResponceUtil addNewIssue(Issue issue){
         int result = issueService.addNewIssue(issue);
         if (result == 1) {
-            return ResponceUtil.success("问题发表成功",null);
+            return ResponceUtil.success("提问发表成功",null);
         } else {
-            return ResponceUtil.fail("问题发表失败");
+            return ResponceUtil.fail("提问发表失败");
         }
     }
 
-    @PostMapping("/deleteIssue")
-    public ResponceUtil deleteIssue(Integer issueId){
+    @DeleteMapping("/{issueId}")
+    public ResponceUtil deleteIssue(@PathVariable Integer issueId){
         int result = issueService.deleteIssue(issueId);
         if (result == 1) {
-            return ResponceUtil.success("问题删除成功",null);
+            return ResponceUtil.success("提问删除成功",null);
         } else {
-            return ResponceUtil.fail("问题删除失败");
+            return ResponceUtil.fail("提问删除失败");
         }
     }
 

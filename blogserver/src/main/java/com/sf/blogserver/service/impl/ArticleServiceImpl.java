@@ -1,6 +1,8 @@
 package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Article;
+import com.sf.blogserver.bean.ArticleTag;
+import com.sf.blogserver.bean.Tag;
 import com.sf.blogserver.mapper.*;
 import com.sf.blogserver.service.ArticleService;
 import com.sf.blogserver.vo.ArticleVo;
@@ -37,9 +39,83 @@ public class ArticleServiceImpl implements ArticleService {
     CategoryMapper categoryMapper;
 
     @Override
-    public List<ArticleVo> selectAllArticle() {
+    public List<ArticleVo> getAllArticle() {
+
+        return articlesToVo(articleMapper.selectAll());
+    }
+
+    @Override
+    public List<ArticleVo> getArticlesByCategoryId(Integer categoryId) {
+
+        return articlesToVo(articleMapper.selectByCategoryId(categoryId));
+    }
+
+    @Override
+    public List<ArticleVo> getHotArticles() {
+        return articlesToVo(articleMapper.getHotArticles());
+    }
+
+    @Override
+    public List<ArticleVo> getNewArticles() {
+        return articlesToVo(articleMapper.getNewArticles());
+    }
+
+    @Override
+    public List<ArticleVo> getArticlesByUserId(Integer userId) {
+        return articlesToVo(articleMapper.selectByUserId(userId));
+    }
+
+    @Override
+    public Article getArticleById(Integer articleId) {
+        //增加浏览量
+        articleMapper.increasePageview(articleId);
+        return articleMapper.selectByPrimaryKey(articleId);
+    }
+
+    @Override
+    public int addNewArticle(Article article, List<Tag> oldTags, List<String> newTags) {
+        Date date = new Date();
+        article.setPublishdate(date);
+        article.setEdittime(date);
+        //截取文章
+        String stripHtml = article.getMdcontent();
+        article.setArticleSummary(stripHtml.substring(0, stripHtml.length() > 100 ? 100 : stripHtml.length())+"...");
+        //新增标签，并建立关联
+        for(String tagName:newTags){
+            Tag tag = new Tag();
+            tag.setTagName(tagName);
+            tagMapper.insertSelective(tag);
+
+            ArticleTag articleTag = new ArticleTag();
+            articleTag.setArticleId(article.getArticleId());
+            articleTag.setTagId(tag.getTagId());
+
+            articleTagMapper.insertSelective(articleTag);
+        }
+        //建立文章标签关联
+        for(Tag tag:oldTags){
+            ArticleTag articleTag = new ArticleTag();
+            articleTag.setArticleId(article.getArticleId());
+            articleTag.setTagId(tag.getTagId());
+
+            articleTagMapper.insertSelective(articleTag);
+        }
+        return articleMapper.insertSelective(article);
+    }
+
+    @Override
+    public int updateArticle(Article article) {
+        return articleMapper.updateByPrimaryKeySelective(article);
+    }
+
+    @Override
+    public int deleteArticle(Integer articleId) {
+        return articleMapper.updateToDelete(articleId);
+    }
+
+    public List<ArticleVo> articlesToVo(List<Article> articles){
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.selectAll()){
+        for(Article article:articles){
             ArticleVo articleVo = new ArticleVo();
             //注入已有属性
             articleVo.setArticleId(article.getArticleId());
@@ -64,37 +140,5 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return articleVos;
-    }
-
-    @Override
-    public List<Article> selectArticlesByCategoryId(Integer categoryId) {
-
-        return articleMapper.selectByCategoryId(categoryId);
-    }
-
-    @Override
-    public Article selectArticleByPrimaryKey(Integer articleId) {
-
-        return articleMapper.selectByPrimaryKey(articleId);
-    }
-
-    @Override
-    public int addNewArticle(Article article) {
-        article.setPublishdate(new Date());
-        //截取文章
-        String stripHtml = article.getMdcontent();
-        article.setArticleSummary(stripHtml.substring(0, stripHtml.length() > 50 ? 50 : stripHtml.length()));
-        return articleMapper.insertSelective(article);
-    }
-
-    @Override
-    public int updateArticle(Article article) {
-        return articleMapper.updateByPrimaryKey(article);
-    }
-
-    @Override
-    public int deleteArticle(Integer articleId) {
-
-        return articleMapper.deleteByPrimaryKey(articleId);
     }
 }
