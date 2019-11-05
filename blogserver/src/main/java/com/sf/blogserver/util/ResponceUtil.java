@@ -18,14 +18,14 @@ public class ResponceUtil {
     }
 
     public static ResponceUtil success(String resMsg,Object obj){
-        return new ResponceUtil("200",resMsg,obj);
+        return new ResponceUtil("success",resMsg,obj);
     }
 
     public static ResponceUtil success(String resMsg){
-        return new ResponceUtil("200",resMsg);
+        return new ResponceUtil("success",resMsg);
     }
 
     public static ResponceUtil fail(String resMsg){
-        return new ResponceUtil("400",resMsg);
+        return new ResponceUtil("error",resMsg);
     }
 }

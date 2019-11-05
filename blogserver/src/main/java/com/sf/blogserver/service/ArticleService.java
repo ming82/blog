@@ -18,7 +18,9 @@ public interface ArticleService {
 
     List<ArticleVo> getArticlesByUserId(Integer userId);
 
-    Article getArticleById(Integer articleId);
+    ArticleVo getArticleById(Integer articleId);
+
+    int likeArticle(Integer articleId);
 
     int addNewArticle(Article article, List<Tag> oldTags, List<String> newTags);
 

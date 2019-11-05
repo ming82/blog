@@ -1,6 +1,7 @@
 package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Comment;
+import com.sf.blogserver.mapper.ArticleMapper;
 import com.sf.blogserver.mapper.CommentMapper;
 import com.sf.blogserver.mapper.UserMapper;
 import com.sf.blogserver.service.CommentService;
@@ -19,12 +20,36 @@ public class CommentServiceImpl implements CommentService {
     CommentMapper commentMapper;
 
     @Autowired
+    ArticleMapper articleMapper;
+
+    @Autowired
     UserMapper userMapper;
 
     @Override
     public List<CommentVo> getCommentByArticleId(Integer articleId) {
-        List<CommentVo> commentVos = new ArrayList<>();//返回给界面的评论集合
-        List<Comment> comments = commentMapper.selectByArticleId(articleId);
+        return commentToVo(commentMapper.selectByArticleId(articleId));
+    }
+
+    @Override
+    public List<CommentVo> getCommentByAnswerId(Integer answerId) {
+        return commentToVo(commentMapper.selectByAnswerId(answerId));
+    }
+
+    @Override
+    public int deleteComment(Integer commentId) {
+        return commentMapper.updateToDelete(commentId);
+    }
+
+    @Override
+    public int addNewComment(Comment comment) {
+        //评论数加一
+        articleMapper.increaseComment(comment.getArticleId());
+        return commentMapper.insertSelective(comment);
+    }
+    List<CommentVo> commentToVo(List<Comment> comments){
+        //返回给界面的评论集合
+        List<CommentVo> commentVos = new ArrayList<>();
+
         for (Comment comment:comments){
             CommentVo commentVo = new CommentVo();
             commentVo.setAnswerId(comment.getAnswerId());
@@ -36,8 +61,10 @@ public class CommentServiceImpl implements CommentService {
             //获取用户名
             commentVo.setUserNickname(userMapper.selectByPrimaryKey(comment.getUserId()).getUserNickname());
             //获取评论回复
-            List<CommentAnswerVo> commentAnswerVos = new ArrayList<>();//为commentVos中的commentAnswers赋值
-            List<Comment> commentAnswers = commentMapper.selectByParentId(comment.getCommentId());//获取comment_parentId为该commentId的评论集合
+            //为commentVos中的commentAnswers赋值
+            List<CommentAnswerVo> commentAnswerVos = new ArrayList<>();
+            //获取comment_parentId为该commentId的评论集合
+            List<Comment> commentAnswers = commentMapper.selectByParentId(comment.getCommentId());
             for (Comment commentAnswer:commentAnswers){
                 CommentAnswerVo commentAnswerVo = new CommentAnswerVo();
 
@@ -54,15 +81,5 @@ public class CommentServiceImpl implements CommentService {
             commentVos.add(commentVo);
         }
         return commentVos;
-    }
-
-    @Override
-    public int deleteComment(Integer commentId) {
-        return commentMapper.updateToDelete(commentId);
-    }
-
-    @Override
-    public int addNewComment(Comment comment) {
-        return commentMapper.insertSelective(comment);
     }
 }

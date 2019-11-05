@@ -3,7 +3,9 @@
     <el-header>
       <HeaderTop>
         <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button>个人空间 <el-badge class="mark" :value="12" /></el-button>
+          <el-button>个人空间
+            <el-badge class="mark" :value="12"/>
+          </el-button>
         </div>
         <div class="unlogin" slot="isLogin" v-else>
           <el-button>登录</el-button>
@@ -15,16 +17,13 @@
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px">
         <AuthorInfo></AuthorInfo>
-        <br>
-        <SideGuide tag="文章分类"></SideGuide>
       </el-aside>
       <el-main class="mainwidth">
-        <ArticleDetail></ArticleDetail>
+        <ArticleDetail :article="this.article"></ArticleDetail>
+        <br/>
+        <Comments :comment="comment" v-for="(comment,index) in this.comments" :key="index"></Comments>
         <br/>
         <Comment></Comment>
-        <br/>
-        <Comments></Comments>
-        <Comments></Comments>
       </el-main>
     </el-container>
     <el-footer>
@@ -34,28 +33,46 @@
 </template>
 
 <script>
-    import AuthorInfo from "../../components/AuthorInfo/AuthorInfo";
-    import HeaderTop from "../../components/HeaderTop/HeaderTop";
-    import Footer from "../../components/Footer/Footer";
-    import ArticleSummary from "../../components/ArticleSummary/ArticleSummary";
-    import ArticleDetail from "../../components/ArticleDetail/ArticleDetail";
-    import SideGuide from "../../components/SideGuide/SideGuide";
-    import Comment from "../../components/Comment/Comment";
-    import Comments from "../../components/Comments/Comments";
-    export default {
-      data() {
-        return {
-          isLogin: false,
+  import AuthorInfo from "../../components/AuthorInfo/AuthorInfo";
+  import HeaderTop from "../../components/HeaderTop/HeaderTop";
+  import Footer from "../../components/Footer/Footer";
+  import ArticleSummary from "../../components/ArticleSummary/ArticleSummary";
+  import ArticleDetail from "../../components/ArticleDetail/ArticleDetail";
+  import SideGuide from "../../components/SideGuide/SideGuide";
+  import Comment from "../../components/Comment/Comment";
+  import Comments from "../../components/Comments/Comments";
+  import {reqArticle, reqArticleComments} from "../../api";
+
+  export default {
+    data() {
+      return {
+        isLogin: false,
+        article: null,
+        comments:[]
+      }
+    },
+    mounted() {
+      reqArticle(this.$route.params.id).then(result=>{
+        if(result.status === "success"){
+          this.article = result.data
         }
-      },
-        name: "Article",
-      components: {Comments, ArticleDetail, ArticleSummary, Footer, HeaderTop, AuthorInfo,SideGuide,Comment}
-    }
+      })
+
+      reqArticleComments(this.$route.params.id).then(result => {
+        if (result.status === "success") {
+          this.comments = result.data
+        }
+      })
+    },
+    name: "Article",
+    components: {Comments, ArticleDetail, ArticleSummary, Footer, HeaderTop, AuthorInfo, SideGuide, Comment}
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .mainwidth
     margin-right 130px
+
   .shadow
     background-color #fdfdfd
     box-shadow 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
@@ -69,6 +86,7 @@
     margin-left 150px
     margin-top 40px
     margin-bottom 5px
+
   .el-main
     margin-top 20px
     margin-bottom 5px
@@ -77,8 +95,8 @@
     border 0px
 
   .login
-    margin-top 15px
-    margin-left 430px
+    margin-top 10px
+    margin-left 400px
 
   .unlogin
     margin-top 10px

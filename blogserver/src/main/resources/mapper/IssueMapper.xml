@@ -28,6 +28,23 @@
     from issue
     where issue_status > 0
   </select>
+  <select id="selectNoAnswer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from issue
+    where issue_status > 0 and issue_answers = 0
+  </select>
+  <select id="selectHotIssues" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from issue
+    where issue_status > 0 and issue_answers >5
+  </select>
+  <update id="increaseAnswers" parameterType="java.lang.Integer">
+    update issue
+    set issue_answers = issue_answers + 1
+    where issue_id = #{issueId,jdbcType=INTEGER}
+  </update>
   <select id="selectByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

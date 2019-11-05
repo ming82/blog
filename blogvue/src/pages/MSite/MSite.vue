@@ -3,7 +3,9 @@
     <el-header>
       <HeaderTop>
         <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button>个人空间 <el-badge class="mark" :value="12" /></el-button>
+          <el-button >个人空间
+            <el-badge class="mark" :value="12"/>
+          </el-button>
         </div>
         <div class="unlogin" slot="isLogin" v-else>
           <el-button>登录</el-button>
@@ -12,24 +14,21 @@
         </div>
       </HeaderTop>
     </el-header>
-    <el-container style="background-color: aliceblue;">
+    <el-container style="background-color: aliceblue; ">
       <el-aside width="200px">
-        <SideGuide tag="文章分类"></SideGuide>
+        <SideGuide tag="文章分类" :categorys="category"></SideGuide>
       </el-aside>
       <el-main class="mainwidth">
         <el-tabs type="border-card">
           <el-tab-pane label="为你推荐">
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
-            <ArticleSummary></ArticleSummary>
+            <ArticleSummary :article="article" v-for="(article,index) in articles" :key="index"></ArticleSummary>
           </el-tab-pane>
-          <el-tab-pane label="近期热门">近期热门</el-tab-pane>
-          <el-tab-pane label="最新发布">最新发布</el-tab-pane>
+          <el-tab-pane label="近期热门">
+            <ArticleSummary :article="article" v-for="(article,index) in hotArticles" :key="index"></ArticleSummary>
+          </el-tab-pane>
+          <el-tab-pane label="最新发布">
+            <ArticleSummary :article="article" v-for="(article,index) in newArticles" :key="index"></ArticleSummary>
+          </el-tab-pane>
         </el-tabs>
       </el-main>
     </el-container>
@@ -45,6 +44,7 @@
   import AuthorInfo from "../../components/AuthorInfo/AuthorInfo";
   import Footer from "../../components/Footer/Footer";
   import ArticleSummary from "../../components/ArticleSummary/ArticleSummary";
+  import {mapState} from 'vuex'
 
   export default {
     data() {
@@ -52,14 +52,25 @@
         isLogin: true,
       }
     },
+    methods:{
+    },
     name: "MSite",
-    components: {ArticleSummary, Footer, AuthorInfo, SideGuide, HeaderTop}
+    components: {ArticleSummary, Footer, AuthorInfo, SideGuide, HeaderTop},
+    mounted() {
+      this.$store.dispatch('getAllArticles')
+      this.$store.dispatch('getHotArticles')
+      this.$store.dispatch('getNewArticles')
+    },
+    computed: {
+      ...mapState(['articles','hotArticles','newArticles','category']),
+    },
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .mainwidth
     margin-right 130px
+
   .shadow
     background-color #fdfdfd
     box-shadow 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
@@ -73,6 +84,7 @@
     margin-left 150px
     margin-top 40px
     margin-bottom 5px
+
   .el-main
     margin-top 20px
     margin-bottom 5px

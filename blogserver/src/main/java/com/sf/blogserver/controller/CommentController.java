@@ -3,11 +3,8 @@ package com.sf.blogserver.controller;
 import com.sf.blogserver.bean.Comment;
 import com.sf.blogserver.service.CommentService;
 import com.sf.blogserver.util.ResponceUtil;
-import com.sf.blogserver.vo.CommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @Discription
@@ -22,9 +19,14 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @GetMapping("/getAll")
-    public ResponceUtil getComment(Integer articleId){
+    @GetMapping("/getByArticleId")
+    public ResponceUtil getCommentByArticleId(Integer articleId){
         return ResponceUtil.success("查询成功",commentService.getCommentByArticleId(articleId));
+    }
+
+    @GetMapping("/getByAnswerId")
+    public ResponceUtil getCommentByAnswerId(Integer answerId){
+        return ResponceUtil.success("查询成功",commentService.getCommentByAnswerId(answerId));
     }
 
     @DeleteMapping("/{commentId}")

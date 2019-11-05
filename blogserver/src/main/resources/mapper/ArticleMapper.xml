@@ -44,7 +44,7 @@
     <include refid="Base_Column_List" />
     from article
     where article_status = 1
-    order by  publishDate desc)  as total limit 0,8
+    order by  publishDate desc limit 0,8
   </select>
   <select id="selectByUserId" resultMap="BaseResultMap">
     select
@@ -232,7 +232,7 @@
     set article_likes = article_likes +'1'
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
-  <update id="increasePageviews" parameterType="java.lang.Integer">
+  <update id="increasePageview" parameterType="java.lang.Integer">
     update article
     set article_pageviews = article_pageviews +'1'
     where article_id = #{articleId,jdbcType=INTEGER}

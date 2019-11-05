@@ -18,11 +18,17 @@ public class IssueVo {
 
     private String issueTitle;
 
-    private Integer userId;
+    private String mdcontent;
 
-    private String userNickname;
+    private String htmlcontent;
+
+    private Integer userId;
 
     private Date publishdate;
 
+    private Integer issueStatus;
+
     private Integer issueAnswers;
+
+    private String userNickname;
 }

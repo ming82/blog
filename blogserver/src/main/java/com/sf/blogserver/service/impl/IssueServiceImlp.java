@@ -30,18 +30,52 @@ public class IssueServiceImlp implements IssueService {
 
     @Override
     public List<IssueVo> selectAllIssue() {
-       return IssueToVo(issueMapper.selectAll());
+        List<IssueVo> issueVos = new ArrayList<>();
+        for (Issue issue : issueMapper.selectAll()) {
+            issueVos.add(issueToVo(issue));
+        }
+        return issueVos;
     }
 
     @Override
-    public Issue selectIssueById(Integer issueId) {
+    public IssueVo selectIssueById(Integer issueId) {
+        return issueToVo(issueMapper.selectByPrimaryKey(issueId));
+    }
 
-        return issueMapper.selectByPrimaryKey(issueId);
+    @Override
+    public List<IssueVo> getIssuesByCategoryId(Integer categoryId) {
+        List<IssueVo> issueVos = new ArrayList<>();
+        for (Issue issue : issueMapper.selectByCategoryId(categoryId)) {
+            issueVos.add(issueToVo(issue));
+        }
+        return issueVos;
+    }
+
+    @Override
+    public List<IssueVo> getNoAnswer() {
+        List<IssueVo> issueVos = new ArrayList<>();
+        for (Issue issue : issueMapper.selectNoAnswer()) {
+            issueVos.add(issueToVo(issue));
+        }
+        return issueVos;
+    }
+
+    @Override
+    public List<IssueVo> getHotIssues() {
+        List<IssueVo> issueVos = new ArrayList<>();
+        for (Issue issue : issueMapper.selectHotIssues()) {
+            issueVos.add(issueToVo(issue));
+        }
+        return issueVos;
     }
 
     @Override
     public List<IssueVo> getIssuesByUserId(Integer userId) {
-        return IssueToVo(issueMapper.selectByUserId(userId));
+        List<IssueVo> issueVos = new ArrayList<>();
+        for (Issue issue : issueMapper.selectByUserId(userId)) {
+            issueVos.add(issueToVo(issue));
+        }
+        return issueVos;
     }
 
     @Override
@@ -57,24 +91,22 @@ public class IssueServiceImlp implements IssueService {
 
     /**
      * 将issue转为issueVo
-     * @param issues
+     *
+     * @param issue
      * @return
      */
-    List<IssueVo> IssueToVo(List<Issue> issues){
-        List<IssueVo> issueVos=new ArrayList<>();
-        for (Issue issue :issues) {
-            //注入已有属性
-            IssueVo issueVo=new IssueVo();
-            issueVo.setIssueId(issue.getIssueId());
-            issueVo.setIssueTitle(issue.getIssueTitle());
-            issueVo.setUserId(issue.getUserId());
-            issueVo.setPublishdate(issue.getPublishdate());
-            issueVo.setIssueAnswers(issue.getIssueAnswers());
-            //获取用户昵称
-            issueVo.setUserNickname(userMapper.selectByPrimaryKey(issue.getUserId()).getUserNickname());
+    IssueVo issueToVo(Issue issue) {
+        IssueVo issueVo = new IssueVo();
+        issueVo.setIssueId(issue.getIssueId());
+        issueVo.setIssueTitle(issue.getIssueTitle());
+        issueVo.setUserId(issue.getUserId());
+        issueVo.setHtmlcontent(issue.getHtmlcontent());
+        issueVo.setMdcontent(issue.getMdcontent());
+        issueVo.setPublishdate(issue.getPublishdate());
+        issueVo.setIssueAnswers(issue.getIssueAnswers());
+        //获取用户昵称
+        issueVo.setUserNickname(userMapper.selectByPrimaryKey(issue.getUserId()).getUserNickname());
 
-            issueVos.add(issueVo);
-        }
-        return issueVos;
+        return issueVo;
     }
 }

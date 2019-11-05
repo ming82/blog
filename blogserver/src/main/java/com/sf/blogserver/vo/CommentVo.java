@@ -1,6 +1,5 @@
 package com.sf.blogserver.vo;
 
-import com.sf.blogserver.bean.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

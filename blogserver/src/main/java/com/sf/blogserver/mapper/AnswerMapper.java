@@ -20,4 +20,6 @@ public interface AnswerMapper {
     int updateByPrimaryKeySelective(Answer record);
 
     int updateByPrimaryKey(Answer record);
+
+    int updateToDelete(Integer answerId);
 }

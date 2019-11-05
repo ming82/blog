@@ -5,8 +5,17 @@
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
 export default {
   name: 'App',
+  mounted () {
+    // this.$store.dispatch('getAddress')
+    this.getCategory()
+  },
+
+  methods: {
+    ...mapActions(['getCategory'])
+  },
 }
 </script>
 

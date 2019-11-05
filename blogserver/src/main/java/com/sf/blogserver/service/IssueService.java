@@ -8,7 +8,13 @@ import java.util.List;
 public interface IssueService {
     public List<IssueVo> selectAllIssue();
 
-    public Issue selectIssueById(Integer issueId);
+    public IssueVo selectIssueById(Integer issueId);
+
+    public List<IssueVo> getIssuesByCategoryId(Integer categoryId);
+
+    public List<IssueVo> getNoAnswer();
+
+    public List<IssueVo> getHotIssues();
 
     public List<IssueVo> getIssuesByUserId(Integer userId);
 

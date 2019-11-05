@@ -15,6 +15,12 @@ public interface IssueMapper {
 
     List<Issue> selectAll();
 
+    List<Issue> selectNoAnswer();
+
+    List<Issue> selectHotIssues();
+
+    int increaseAnswers(Integer issueId);
+
     List<Issue> selectByCategoryId(Integer categoryId);
 
     List<Issue> selectByUserId(Integer userId);

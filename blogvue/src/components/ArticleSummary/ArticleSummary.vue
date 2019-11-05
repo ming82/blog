@@ -1,26 +1,26 @@
 <template>
   <div class="shadow textleft">
     <div>
-      <a class="articlehref" href="/article">
+      <a class="articlehref"  @click="toArticle()">
         <div>
           <h4 class="title">
-            <span>收到反馈了</span>
-            <el-tag>ssdf</el-tag>
+            <span>{{article.articleTitle}}</span>
+            <el-tag v-for="(tag,index) in article.tags" :key="index">{{tag}}</el-tag>
           </h4>
         </div>
         <div>
-          <p class="summary">收到甲方了收到甲方老师等级分类考试等级分类是否建立收到甲方绿山咖啡的结论是东方嘉盛两款手机登录福建省地方就是房价来说都发了啥地方克里斯多夫极乐世界逢狼时刻附件零食分解落实镂空设计的分类考试的交流方式的来访记录圣诞节</p>
+          <p class="summary">{{article.articleSummary}}</p>
         </div>
       </a>
       <div align="left">
-        <v-icon name="thumbs-up"></v-icon><span class="summary">×6</span>
+        <v-icon name="thumbs-up"></v-icon><span class="summary">×{{article.articleLikes}}</span>
         &nbsp;&nbsp;
-        <i class="el-icon-chat-dot-round"></i><span class="summary">×6</span>
+        <i class="el-icon-chat-dot-round"></i><span class="summary">×{{article.articleComments}}</span>
         &nbsp;&nbsp;
-        <i class="el-icon-view"></i><span class="summary">&nbsp;6</span>
+        <i class="el-icon-view"></i><span class="summary">&nbsp;{{article.articlePageviews}}</span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span class="summary">司命</span>
-        <span class="summary time">2019-10-24</span>
+        <span class="summary">{{article.userNickname}}</span>
+        <span class="summary time">{{article.publishdate}}</span>
       </div>
     </div>
   </div>
@@ -28,14 +28,25 @@
 
 <script>
   export default {
+    props: {
+      article: Object
+    },
     name: "ArticleSummary",
+    methods:{
+      toArticle(){
+        this.$router.push({
+          path: `/article/${this.article.articleId}`,
+        })
+      }
+    }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .time
-    margin-left  650px
+    margin-left  600px
   .articlehref
+    cursor pointer
     text-decoration none
   .summary
     color #909399

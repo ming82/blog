@@ -36,12 +36,17 @@ public class ArticleController {
     }
 
     @GetMapping("/getByCategoryId")
-    public ResponceUtil getArticlesByCategoryId(@PathVariable Integer categoryId){
+    public ResponceUtil getArticlesByCategoryId(Integer categoryId){
         return ResponceUtil.success("查询成功",articleService.getArticlesByCategoryId(categoryId));
     }
 
+    @PostMapping("/like")
+    public ResponceUtil likeArticle(Integer articleId){
+        return ResponceUtil.success("已点赞",articleService.likeArticle(articleId));
+    }
+
     @GetMapping("/getByUserId")
-    public ResponceUtil getArticlesByUserId(@PathVariable Integer userId){
+    public ResponceUtil getArticlesByUserId(Integer userId){
         return ResponceUtil.success("查询成功",articleService.getArticlesByUserId(userId));
     }
 
@@ -71,7 +76,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public ResponceUtil deleteArticle(Integer articleId){
+    public ResponceUtil deleteArticle(@PathVariable Integer articleId){
         int result = articleService.deleteArticle(articleId);
         if (result == 1) {
             return ResponceUtil.success("文章删除成功");

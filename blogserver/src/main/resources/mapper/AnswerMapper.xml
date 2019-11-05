@@ -151,4 +151,9 @@
       answer_comments = #{answerComments,jdbcType=INTEGER}
     where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
+  <update id="updateToDelete" parameterType="java.lang.Integer">
+    update answer
+    set answer_status = 0,
+    where answer_id = #{answerId,jdbcType=INTEGER}
+  </update>
 </mapper>

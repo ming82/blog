@@ -22,6 +22,8 @@ public class CommentAnswerVo {
 
     private Date publishdate;
 
+    private Integer userId;
+
     private String commentParentUserNickname;
 
     private String userNickname;

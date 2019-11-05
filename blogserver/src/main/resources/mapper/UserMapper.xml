@@ -12,25 +12,31 @@
     <result column="user_registeTime" jdbcType="TIMESTAMP" property="userRegistetime" />
   </resultMap>
   <sql id="Base_Column_List">
-    user_id, user_name, user_nickname, user_password, user_status, user_email, user_picture, 
+    user_id, user_name, user_nickname, user_password, user_status, user_email, user_picture,
     user_registeTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user
     where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where user_name = #{userName,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from user
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sf.blogserver.bean.User">
-    insert into user (user_id, user_name, user_nickname, 
-      user_password, user_status, user_email, 
+    insert into user (user_id, user_name, user_nickname,
+      user_password, user_status, user_email,
       user_picture, user_registeTime)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userNickname,jdbcType=VARCHAR}, 
-      #{userPassword,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER}, #{userEmail,jdbcType=VARCHAR}, 
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userNickname,jdbcType=VARCHAR},
+      #{userPassword,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER}, #{userEmail,jdbcType=VARCHAR},
       #{userPicture,jdbcType=VARCHAR}, #{userRegistetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sf.blogserver.bean.User">

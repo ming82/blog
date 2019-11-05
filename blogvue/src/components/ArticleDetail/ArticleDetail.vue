@@ -2,16 +2,16 @@
   <div class="shadow">
     <el-row style="min-height:800px;*+height:100%;_height:400px;">
       <el-col :span="24" align="left" class="marginleft">
-        <h2><span>这是一个标题</span>
-          <el-tag>sdfd</el-tag>
+        <h2><span>{{article.articleTitle}}</span>
+          <el-tag v-for="(tag,index) in article.tags" :key="index">{{tag}}</el-tag>
         </h2>
       </el-col>
       <el-col :span="24" align="left" class="marginleft time">
-        <span>2018-8-8</span>
+        <span>{{article.publishdate}}</span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a class="href" href="">司命</a>
+        <a class="href" href="">{{article.userNickname}}</a>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span>阅读数：6</span>
+        <span>阅读数：{{article.articlePageviews}}</span>
       </el-col>
       <el-col>
         <div style="margin-right: 10px;margin-left: 10px;">
@@ -19,20 +19,23 @@
         </div>
       </el-col>
       <el-col :span="24" align="left" class="marginleft">
-        <div>文章正文</div>
+        <div v-html="article.htmlcontent"></div>
       </el-col>
     </el-row>
     <div class="edittime">
       <v-icon name="thumbs-up"></v-icon>
-      <span class="summary">×6</span>
-      <span>文章最后编辑与2018-8-9</span>
+      <span class="summary">×{{article.articleLikes}}</span>
+      <span>{{article.edittime}}</span>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: "ArticleDetail"
+    name: "ArticleDetail",
+    props:{
+      article: Object,
+    }
   }
 </script>
 

@@ -40,36 +40,59 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleVo> getAllArticle() {
-
-        return articlesToVo(articleMapper.selectAll());
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.selectAll()){
+            articleVos.add(articleToVo(article));
+        }
+        return articleVos;
     }
 
     @Override
     public List<ArticleVo> getArticlesByCategoryId(Integer categoryId) {
-
-        return articlesToVo(articleMapper.selectByCategoryId(categoryId));
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.selectByCategoryId(categoryId)){
+            articleVos.add(articleToVo(article));
+        }
+        return articleVos;
     }
 
     @Override
     public List<ArticleVo> getHotArticles() {
-        return articlesToVo(articleMapper.getHotArticles());
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.getHotArticles()){
+            articleVos.add(articleToVo(article));
+        }
+        return articleVos;
     }
 
     @Override
     public List<ArticleVo> getNewArticles() {
-        return articlesToVo(articleMapper.getNewArticles());
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.getNewArticles()){
+            articleVos.add(articleToVo(article));
+        }
+        return articleVos;
     }
 
     @Override
     public List<ArticleVo> getArticlesByUserId(Integer userId) {
-        return articlesToVo(articleMapper.selectByUserId(userId));
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.selectByUserId(userId)){
+            articleVos.add(articleToVo(article));
+        }
+        return articleVos;
     }
 
     @Override
-    public Article getArticleById(Integer articleId) {
+    public ArticleVo getArticleById(Integer articleId) {
         //增加浏览量
         articleMapper.increasePageview(articleId);
-        return articleMapper.selectByPrimaryKey(articleId);
+        return articleToVo(articleMapper.selectByPrimaryKey(articleId));
+    }
+
+    @Override
+    public int likeArticle(Integer articleId) {
+        return articleMapper.increaseLike(articleId);
     }
 
     @Override
@@ -113,9 +136,7 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.updateToDelete(articleId);
     }
 
-    public List<ArticleVo> articlesToVo(List<Article> articles){
-        List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articles){
+    public ArticleVo articleToVo(Article article){
             ArticleVo articleVo = new ArticleVo();
             //注入已有属性
             articleVo.setArticleId(article.getArticleId());
@@ -125,6 +146,10 @@ public class ArticleServiceImpl implements ArticleService {
             articleVo.setArticlePageviews(article.getArticlePageviews());
             articleVo.setArticleSummary(article.getArticleSummary());
             articleVo.setPublishdate(article.getPublishdate());
+            articleVo.setEdittime(article.getEdittime());
+            articleVo.setHtmlcontent(article.getHtmlcontent());
+            articleVo.setMdcontent(article.getMdcontent());
+            articleVo.setUserId(article.getUserId());
             //获取用户昵称
             articleVo.setUserNickname(userMapper.selectByPrimaryKey(article.getUserId()).getUserNickname());
             //获取文章标签
@@ -135,10 +160,6 @@ public class ArticleServiceImpl implements ArticleService {
             }
             articleVo.setTags(tags);
 
-
-            articleVos.add(articleVo);
-        }
-
-        return articleVos;
+        return articleVo;
     }
 }

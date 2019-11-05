@@ -30,6 +30,18 @@ public class IssueController {
     public ResponceUtil getIssuesByUserId(Integer userId){
         return ResponceUtil.success("查询成功",issueService.getIssuesByUserId(userId));
     }
+    @GetMapping("/getByCategoryId")
+    public ResponceUtil getIssuesByCategoryId(Integer categoryId){
+        return ResponceUtil.success("查询成功",issueService.getIssuesByCategoryId(categoryId));
+    }
+    @GetMapping("/getNoAnswers")
+    public ResponceUtil getNoAnswers(){
+        return ResponceUtil.success("查询成功",issueService.getNoAnswer());
+    }
+    @GetMapping("/getHotIssues")
+    public ResponceUtil getHotIssues(){
+        return ResponceUtil.success("查询成功",issueService.getHotIssues());
+    }
 
     @GetMapping("/{issueId}")
     public ResponceUtil getIssueById(@PathVariable Integer issueId){

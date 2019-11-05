@@ -23,7 +23,7 @@ export default new VueRouter({
       component: MSite,
     },
     {
-      path:'/article',
+      path:'/article/:id',
       component: Article,
     },
     {
@@ -35,7 +35,7 @@ export default new VueRouter({
       component: About,
     },
     {
-      path:'/issue',
+      path:'/issue/:id',
       component: Issue,
     },
     {
@@ -44,7 +44,7 @@ export default new VueRouter({
     },
     {
       path: '/',
-      redirect: '/issue',
+      redirect: '/msite',
     },
   ]
 })

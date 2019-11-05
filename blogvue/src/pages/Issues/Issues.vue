@@ -14,15 +14,19 @@
     </el-header>
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px">
-        <SideGuide tag="问题分类"></SideGuide>
+        <SideGuide tag="问题分类" :categorys="category"></SideGuide>
       </el-aside>
       <el-main class="mainwidth">
         <el-tabs type="border-card">
-          <el-tab-pane label="最新回答">
-            <IssueSummary></IssueSummary>
+          <el-tab-pane label="为你推荐">
+            <IssueSummary :issue="issue" v-for="(issue,index) in issues" :key="index"></IssueSummary>
           </el-tab-pane>
-          <el-tab-pane label="等待回答">近期热门</el-tab-pane>
-          <el-tab-pane label="热门回答">最新发布</el-tab-pane>
+          <el-tab-pane label="等待回答">
+            <IssueSummary :issue="issue" v-for="(issue,index) in noAnswerIssues" :key="index"></IssueSummary>
+          </el-tab-pane>
+          <el-tab-pane label="热门问题">
+            <IssueSummary :issue="issue" v-for="(issue,index) in hotIssues" :key="index"></IssueSummary>
+          </el-tab-pane>
         </el-tabs>
       </el-main>
     </el-container>
@@ -38,6 +42,7 @@
   import AuthorInfo from "../../components/AuthorInfo/AuthorInfo";
   import Footer from "../../components/Footer/Footer";
   import IssueSummary from "../../components/IssueSummary/IssueSummary";
+  import {mapState} from 'vuex'
 
   export default {
     name: "Issues",
@@ -45,6 +50,14 @@
       return {
         isLogin: false,
       }
+    },
+    mounted(){
+      this.$store.dispatch('getAllIssues')
+      this.$store.dispatch('getHotIssues')
+      this.$store.dispatch('getNoAnswerIssues')
+    },
+    computed: {
+      ...mapState(['category','issues','hotIssues','noAnswerIssues']),
     },
     components: {IssueSummary, Footer, AuthorInfo, SideGuide, HeaderTop}
   }
