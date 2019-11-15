@@ -3,6 +3,7 @@
 <mapper namespace="com.sf.blogserver.mapper.MessageMapper">
   <resultMap id="BaseResultMap" type="com.sf.blogserver.bean.Message">
     <id column="message_id" jdbcType="INTEGER" property="messageId" />
+    <result column="commentUserId" jdbcType="INTEGER" property="commentuserid" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="article_id" jdbcType="INTEGER" property="articleId" />
     <result column="answer_id" jdbcType="INTEGER" property="answerId" />
@@ -11,7 +12,8 @@
     <result column="publishDate" jdbcType="TIMESTAMP" property="publishdate" />
   </resultMap>
   <sql id="Base_Column_List">
-    message_id, user_id, article_id, answer_id, message_type, message_isread, publishDate
+    message_id, commentUserId, user_id, article_id, answer_id, message_type, message_isread,
+    publishDate
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -19,15 +21,23 @@
     from message
     where message_id = #{messageId,jdbcType=INTEGER}
   </select>
-  <select id="selectAllByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getNoReadMessages" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from message
-    where user_id = #{userId,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER} and message_isread = 0
+    order by publishdate desc
   </select>
-  <select id="selectNoreadByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getReadMessages" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
+    from message
+    where user_id = #{userId,jdbcType=INTEGER} and message_isread = 1
+    order by publishdate desc
+  </select>
+  <select id="countNoRead" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select
+    count(*)
     from message
     where user_id = #{userId,jdbcType=INTEGER} and message_isread = 0
   </select>
@@ -36,18 +46,21 @@
     where message_id = #{messageId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.sf.blogserver.bean.Message">
-    insert into message (message_id, user_id, article_id,
-      answer_id, message_type, message_isread,
-      publishDate)
-    values (#{messageId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER},
-      #{answerId,jdbcType=INTEGER}, #{messageType,jdbcType=INTEGER}, #{messageIsread,jdbcType=INTEGER},
-      #{publishdate,jdbcType=TIMESTAMP})
+    insert into message (message_id, commentUserId, user_id,
+      article_id, answer_id, message_type,
+      message_isread, publishDate)
+    values (#{messageId,jdbcType=INTEGER}, #{commentuserid,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+      #{articleId,jdbcType=INTEGER}, #{answerId,jdbcType=INTEGER}, #{messageType,jdbcType=INTEGER},
+      #{messageIsread,jdbcType=INTEGER}, #{publishdate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Message">
     insert into message
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="messageId != null">
         message_id,
+      </if>
+      <if test="commentuserid != null">
+        commentUserId,
       </if>
       <if test="userId != null">
         user_id,
@@ -72,6 +85,9 @@
       <if test="messageId != null">
         #{messageId,jdbcType=INTEGER},
       </if>
+      <if test="commentuserid != null">
+        #{commentuserid,jdbcType=INTEGER},
+      </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
       </if>
@@ -95,6 +111,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.bean.Message">
     update message
     <set>
+      <if test="commentuserid != null">
+        commentUserId = #{commentuserid,jdbcType=INTEGER},
+      </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
       </if>
@@ -118,12 +137,18 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sf.blogserver.bean.Message">
     update message
-    set user_id = #{userId,jdbcType=INTEGER},
+    set commentUserId = #{commentuserid,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
       article_id = #{articleId,jdbcType=INTEGER},
       answer_id = #{answerId,jdbcType=INTEGER},
       message_type = #{messageType,jdbcType=INTEGER},
       message_isread = #{messageIsread,jdbcType=INTEGER},
       publishDate = #{publishdate,jdbcType=TIMESTAMP}
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </update>
+  <update id="markRead" parameterType="java.lang.Integer">
+    update message
+    set message_isread = 1
     where message_id = #{messageId,jdbcType=INTEGER}
   </update>
 </mapper>

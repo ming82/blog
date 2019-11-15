@@ -2,7 +2,7 @@ package com.sf.blogserver.controller;
 
 import com.sf.blogserver.bean.Answer;
 import com.sf.blogserver.service.AnswerService;
-import com.sf.blogserver.util.ResponceUtil;
+import com.sf.blogserver.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,31 +19,31 @@ public class AnswerController {
     AnswerService answerService;
 
     @GetMapping("/getAnswersByIssueId")
-    public ResponceUtil getAnswersByIssueId(Integer issueId) {
-        return ResponceUtil.success("查询成功", answerService.getAnswersByIssueId(issueId));
+    public ResponseUtil getAnswersByIssueId(Integer issueId) {
+        return ResponseUtil.success("查询成功", answerService.getAnswersByIssueId(issueId));
     }
 
     @GetMapping("/getAnswerByUserId")
-    public ResponceUtil getAnswerByUserId(Integer userId) {
-        return ResponceUtil.success("查询成功", answerService.getAnswersByUserId(userId));
+    public ResponseUtil getAnswerByUserId(Integer userId) {
+        return ResponseUtil.success("查询成功", answerService.getAnswersByUserId(userId));
     }
 
     @PostMapping("/")
-    public ResponceUtil addAnswer(Answer answer) {
+    public ResponseUtil addAnswer(@RequestBody Answer answer) {
         int result = answerService.addAnswer(answer);
         if (result == 1) {
-            return ResponceUtil.success("回答发表成功");
+            return ResponseUtil.success("回答发表成功");
         } else {
-            return ResponceUtil.fail("回答发表失败");
+            return ResponseUtil.fail("回答发表失败");
         }
     }
 
     @DeleteMapping("/{answerId}")
-    public ResponceUtil deleteAnswer(@PathVariable Integer answerId) {
+    public ResponseUtil deleteAnswer(@PathVariable Integer answerId) {
         if (answerService.deleteAnswer(answerId) == 1) {
-            return ResponceUtil.success("删除成功");
+            return ResponseUtil.success("删除成功");
         } else {
-            return ResponceUtil.fail("删除失败");
+            return ResponseUtil.fail("删除失败");
         }
     }
 }

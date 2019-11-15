@@ -27,14 +27,29 @@ public class MessageServiceImpl implements MessageService {
     UserMapper userMapper;
 
     @Override
-    public List<MessageVo> getAllByUserId(Integer userId) {
-        return messageToVo(messageMapper.selectAllByUserId(userId));
+    public List<MessageVo> getReadByUserId(Integer userId) {
+        return messageToVo(messageMapper.getReadMessages(userId));
     }
 
     @Override
     public List<MessageVo> getNoreadByUserId(Integer userId) {
-        return messageToVo(messageMapper.selectNoreadByUserId(userId));
+        return messageToVo(messageMapper.getNoReadMessages(userId));
     }
+
+    @Override
+    public int markRead(List<Integer> list) {
+        int flag = 0;
+        for (Integer i:list){
+            flag = messageMapper.markRead(i);
+        }
+        return flag;
+    }
+
+    @Override
+    public int countNoRead(Integer userId) {
+        return messageMapper.countNoRead(userId);
+    }
+
 
     List<MessageVo> messageToVo(List<Message> messages){
         List<MessageVo> messageVos = new ArrayList<>();
@@ -44,12 +59,12 @@ public class MessageServiceImpl implements MessageService {
             messageVo.setMessageId(message.getMessageId());
             messageVo.setAnswerId(message.getAnswerId());
             messageVo.setArticleId(message.getArticleId());
-            messageVo.setUserId(message.getUserId());
+            messageVo.setCommentuserid(message.getCommentuserid());
             messageVo.setMessageIsread(message.getMessageIsread());
             messageVo.setMessageType(message.getMessageType());
             messageVo.setPublishdate(message.getPublishdate());
             //获取昵称
-            messageVo.setUserNickName(userMapper.selectByPrimaryKey(message.getUserId()).getUserNickname());
+            messageVo.setCommentuserNickName(userMapper.selectByPrimaryKey(message.getCommentuserid()).getUserNickname());
 
             messageVos.add(messageVo);
         }

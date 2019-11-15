@@ -23,18 +23,47 @@
       </el-col>
     </el-row>
     <div class="edittime">
-      <v-icon name="thumbs-up"></v-icon>
-      <span class="summary">×{{article.articleLikes}}</span>
+      <div @click="likeClick()" v-if="user.userId">
+        <v-icon name="thumbs-up" style="cursor: pointer"></v-icon>
+        <span class="summary">×{{article.articleLikes}}</span>
+      </div>
+      <div @click="noLogin()" v-else>
+        <v-icon name="thumbs-up" style="cursor: pointer"></v-icon>
+        <span class="summary">×{{article.articleLikes}}</span>
+      </div>
+
       <span>{{article.edittime}}</span>
     </div>
   </div>
 </template>
 
 <script>
+  import {like} from "../../api";
+  import {mapState} from "vuex";
+
   export default {
     name: "ArticleDetail",
     props:{
       article: Object,
+    },
+    inject:["reload"],
+    methods:{
+      likeClick(){
+        like(this.article.articleId,this.user.userId).then(result=>{
+          if(result.status === "success"){
+            this.$message.success(result.resMsg)
+            this.reload()
+          }
+          else
+            this.$message.error(result.resMsg)
+        })
+      },
+      noLogin(){
+        this.$message.warning("登录后可点赞")
+      }
+    },
+    computed:{
+      ...mapState(['user'])
     }
   }
 </script>

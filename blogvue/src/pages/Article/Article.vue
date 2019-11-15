@@ -1,18 +1,7 @@
 <template>
   <el-container style="min-height:710px;*+height:100%;_height:400px;">
     <el-header>
-      <HeaderTop>
-        <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button>个人空间
-            <el-badge class="mark" :value="12"/>
-          </el-button>
-        </div>
-        <div class="unlogin" slot="isLogin" v-else>
-          <el-button>登录</el-button>
-          <span>|</span>
-          <el-button>免费注册</el-button>
-        </div>
-      </HeaderTop>
+      <HeaderTop></HeaderTop>
     </el-header>
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px">
@@ -23,7 +12,8 @@
         <br/>
         <Comments :comment="comment" v-for="(comment,index) in this.comments" :key="index"></Comments>
         <br/>
-        <Comment></Comment>
+        <Comment :id="this.article.articleId" v-if="user.userId"></Comment>
+        <span v-else>请先登录，参与评论</span>
       </el-main>
     </el-container>
     <el-footer>
@@ -42,6 +32,7 @@
   import Comment from "../../components/Comment/Comment";
   import Comments from "../../components/Comments/Comments";
   import {reqArticle, reqArticleComments} from "../../api";
+  import {mapState} from "vuex";
 
   export default {
     data() {
@@ -50,6 +41,9 @@
         article: null,
         comments:[]
       }
+    },
+    computed: {
+      ...mapState(['user']),
     },
     mounted() {
       reqArticle(this.$route.params.id).then(result=>{

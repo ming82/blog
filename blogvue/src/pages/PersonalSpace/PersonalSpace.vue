@@ -1,18 +1,7 @@
 <template>
   <el-container style="min-height:710px;*+height:100%;_height:400px;">
     <el-header>
-      <HeaderTop>
-        <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button>个人空间
-            <el-badge class="mark" :value="12"/>
-          </el-button>
-        </div>
-        <div class="unlogin" slot="isLogin" v-else>
-          <el-button>登录</el-button>
-          <span>|</span>
-          <el-button>免费注册</el-button>
-        </div>
-      </HeaderTop>
+      <HeaderTop></HeaderTop>
     </el-header>
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px" style="overflow-y: hidden">
@@ -27,40 +16,32 @@
             class="el-menu-vertical-demo"
             @select="selecthandle">
             <el-menu-item index="1">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-user"></i>
               <span slot="title">个人信息</span>
             </el-menu-item>
             <el-menu-item index="2">
-              <i class="el-icon-document"></i>
+              <i class="el-icon-edit-outline"></i>
               <span slot="title">发表文章</span>
             </el-menu-item>
             <el-menu-item index="3">
-              <i class="el-icon-document"></i>
+              <i class="el-icon-edit-outline"></i>
               <span slot="title">发表提问</span>
             </el-menu-item>
             <el-menu-item index="4">
               <i class="el-icon-document"></i>
-              <span slot="title">我的文章</span>
+              <span slot="title">我的文章{{articles.length === 0?'':'('+articles.length+')'}}</span>
             </el-menu-item>
             <el-menu-item index="5">
               <i class="el-icon-document"></i>
-              <span slot="title">我的提问</span>
+              <span slot="title">我的提问{{issues.length === 0?'':'('+issues.length+')'}}</span>
             </el-menu-item>
             <el-menu-item index="6">
               <i class="el-icon-document"></i>
-              <span slot="title">我的回答</span>
+              <span slot="title">草稿箱{{drafts.length === 0?'':'('+drafts.length+')'}}</span>
             </el-menu-item>
             <el-menu-item index="7">
-              <i class="el-icon-setting"></i>
-              <span slot="title">草稿箱(1)</span>
-            </el-menu-item>
-            <el-menu-item index="8">
-              <i class="el-icon-setting"></i>
-              <span slot="title">回收站(1)</span>
-            </el-menu-item>
-            <el-menu-item index="9">
-              <i class="el-icon-setting"></i>
-              <span slot="title">消息通知<el-badge value="12"></el-badge></span>
+              <i class="el-icon-message"></i>
+              <span slot="title">消息通知<el-badge v-if="no!=0" :value="noRead"></el-badge></span>
             </el-menu-item>
           </el-menu>
         </div>
@@ -69,20 +50,29 @@
         <div v-if="tag==='1'" >
           <el-tabs type="border-card" style="min-height:570px;*+height:100%;_height:400px;">
             <el-tab-pane label="个人信息">
-              <img src="src/components/HeaderTop/image/icon.png" height="80px" width="80px"/>
-              <p>注册时间</p>
-              <p>姓名</p>
-              <p>昵称</p>
-              <p>邮箱</p>
+              <img src="./image/icon.png" height="80px" width="80px"/>
+              <el-form label-position="left" label-width="80px">
+                <el-form-item label="注册时间">
+                  <span>{{user.userRegistetime | formatDate}}</span>
+                </el-form-item>
+                <el-form-item label="用户名">
+                  <span>{{user.username}}</span>
+                </el-form-item>
+                <el-form-item label="昵称">
+                  <el-input :value="user.userNickname"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                  <el-input type="email" :value="user.userEmail"></el-input>
+                </el-form-item>
+                <el-button>{{tip}}</el-button>
+              </el-form>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div v-if="tag==='2'">
           <el-tabs type="border-card">
             <el-tab-pane label="发表文章">
-              <div class="shadow" align="left">
-                <mavon-editor autofocus='false' v-model="value" style="min-height:500px;*+height:100%;_height:400px;"/>
-              </div>
+              <PostArticle></PostArticle>
             </el-tab-pane>
           </el-tabs>
 
@@ -91,53 +81,39 @@
           <div class="shadow" align="left">
             <el-tabs type="border-card">
               <el-tab-pane label="发表提问">
-                <mavon-editor autofocus='false' v-model="value"/>
+                <PostIssue></PostIssue>
               </el-tab-pane>
             </el-tabs>
-
           </div>
         </div>
         <div v-if="tag==='4'">
           <el-tabs type="border-card">
             <el-tab-pane label="我的文章">
-              <ArticleSummary></ArticleSummary>
+              <ArticleSummary :article="article" v-for="(article,index) in articles" :key="index"></ArticleSummary>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div v-if="tag==='5'">
           <el-tabs type="border-card">
             <el-tab-pane label="我的提问">
-              <IssueSummary></IssueSummary>
+              <IssueSummary :issue="issue" v-for="(issue,index) in issues" :key="index"></IssueSummary>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div v-if="tag==='6'">
           <el-tabs type="border-card">
-            <el-tab-pane label="我的回答">
-              <IssueSummary></IssueSummary>
+            <el-tab-pane label="草稿箱">
+              <ArticleSummary :article="article" v-for="(article,index) in drafts" :key="index"></ArticleSummary>
             </el-tab-pane>
           </el-tabs>
         </div>
         <div v-if="tag==='7'">
           <el-tabs type="border-card">
-            <el-tab-pane label="草稿箱">
-              <ArticleSummary></ArticleSummary>
+            <el-tab-pane label="未读消息">
+              <message :message="message" v-for="(message,index) in noreadMessage" :key="index"></message>
             </el-tab-pane>
-          </el-tabs>
-        </div>
-        <div v-if="tag==='8'">
-          <el-tabs type="border-card">
-            <el-tab-pane label="回收站">
-              <ArticleSummary></ArticleSummary>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-        <div v-if="tag==='9'">
-          <el-tabs type="border-card">
-            <el-tab-pane label="消息通知">
-              <Message></Message>
-              <Message></Message>
-              <Message></Message>
+            <el-tab-pane label="已读消息">
+              <message :message="message" v-for="(message,index) in readMessage" :key="index"></message>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -155,22 +131,105 @@
   import ArticleSummary from "../../components/ArticleSummary/ArticleSummary";
   import IssueSummary from "../../components/IssueSummary/IssueSummary";
   import Message from "../../components/Message/Message";
+  import PostArticle from "../../components/PostArticle/PostArticle";
+  import PostIssue from "../../components/PostIssue/PostIssue";
+  import {
+    markRead,
+    reqArticleByUserId,
+    reqDraftByUserId,
+    reqIssueByUserId,
+    reqNoreadMessage,
+    reqReadMessage
+  } from "../../api";
+  import {mapState} from 'vuex'
+  import {formatTimeToStr} from "../../utils/data";
 
   export default {
     data() {
       return {
         isLogin: true,
         tag: '1',
-        factiveIndex: '1'
+        factiveIndex: '1',
+        articles:[],
+        issues:[],
+        drafts:[],
+        readMessage:[],
+        noreadMessage:[],
+        tip:'',
+      }
+    },
+    watch: {
+      items: {
+        handler: function() {
+          alert(this.$refs.type.value + this.$refs.content.value);
+        },
+        deep: true
+      }
+    },
+    filters:{
+      formatDate: function(time) {
+        if(time!=null&&time!="")
+        {
+          var date = new Date(time);
+          return formatTimeToStr(date, "yyyy-MM-dd");
+        }else{
+          return "";
+        }
       }
     },
     methods: {
       selecthandle(index) {
         this.tag = index
+        if(index === '7'){
+
+          let arr = []
+          this.noreadMessage.forEach(c => {
+            arr.push(c.messageId)
+          })
+          markRead(arr)
+          this.$store.dispatch('readMessage')
+        }
       }
     },
-    name: "MSite",
-    components: {Message, IssueSummary, ArticleSummary, Footer, HeaderTop}
+    computed: {
+      ...mapState(['user','noRead']),
+      no() {
+        return this.$store.state.noRead
+      }
+    },
+    mounted() {
+      reqArticleByUserId(this.user.userId).then(result=>{
+        if(result.status === "success"){
+          this.articles = result.data
+        }
+      })
+
+      reqIssueByUserId(this.user.userId).then(result=>{
+        if(result.status === "success"){
+          this.issues = result.data
+        }
+      })
+
+      reqDraftByUserId(this.user.userId).then(result=>{
+        if(result.status === "success"){
+          this.drafts = result.data
+        }
+      })
+      reqReadMessage(this.user.userId).then(result=>{
+        if(result.status === "success"){
+          this.readMessage = result.data
+        }
+      })
+
+      reqNoreadMessage(this.user.userId).then(result=>{
+        if(result.status === "success"){
+          this.noreadMessage = result.data
+        }
+      })
+
+    },
+    name: "PersonalSpace",
+    components: {PostIssue, PostArticle, Message, IssueSummary, ArticleSummary, Footer, HeaderTop}
   }
 </script>
 

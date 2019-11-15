@@ -18,7 +18,9 @@ public class MessageVo {
 
     private Integer userId;
 
-    private String userNickName;
+    private Integer commentuserid;
+
+    private String commentuserNickName;
 
     private Integer articleId;
 

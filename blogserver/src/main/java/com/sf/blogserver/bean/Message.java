@@ -5,6 +5,8 @@ import java.util.Date;
 public class Message {
     private Integer messageId;
 
+    private Integer commentuserid;
+
     private Integer userId;
 
     private Integer articleId;
@@ -23,6 +25,14 @@ public class Message {
 
     public void setMessageId(Integer messageId) {
         this.messageId = messageId;
+    }
+
+    public Integer getCommentuserid() {
+        return commentuserid;
+    }
+
+    public void setCommentuserid(Integer commentuserid) {
+        this.commentuserid = commentuserid;
     }
 
     public Integer getUserId() {

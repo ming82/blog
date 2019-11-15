@@ -8,4 +8,8 @@ public interface UserService {
     UserDetail getUserByUsername(String userName);
 
     User getUserById(Integer userId);
+
+    int register(User user);
+
+    int nameCheck(String userName);
 }

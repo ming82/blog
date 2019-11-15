@@ -1,9 +1,8 @@
 package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Comment;
-import com.sf.blogserver.mapper.ArticleMapper;
-import com.sf.blogserver.mapper.CommentMapper;
-import com.sf.blogserver.mapper.UserMapper;
+import com.sf.blogserver.bean.Message;
+import com.sf.blogserver.mapper.*;
 import com.sf.blogserver.service.CommentService;
 import com.sf.blogserver.vo.CommentAnswerVo;
 import com.sf.blogserver.vo.CommentVo;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,7 +23,13 @@ public class CommentServiceImpl implements CommentService {
     ArticleMapper articleMapper;
 
     @Autowired
+    AnswerMapper answerMapper;
+
+    @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    MessageMapper messageMapper;
 
     @Override
     public List<CommentVo> getCommentByArticleId(Integer articleId) {
@@ -42,10 +48,28 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public int addNewComment(Comment comment) {
+        Message message = new Message();
         //评论数加一
-        articleMapper.increaseComment(comment.getArticleId());
+        if(comment.getArticleId() != null){
+            message.setArticleId(comment.getArticleId());
+            articleMapper.increaseComment(comment.getArticleId());
+        }
+        if(comment.getAnswerId() != null){
+            answerMapper.increaseComment(comment.getAnswerId());
+        }
+        message.setCommentuserid(comment.getUserId());
+        if(comment.getAnswerId()==null&&comment.getArticleId()==null){
+            message.setUserId(commentMapper.selectByPrimaryKey(comment.getCommentParentid()).getUserId());
+        }else {
+            message.setUserId(articleMapper.selectByPrimaryKey(comment.getArticleId()).getUserId());
+        }
+        message.setPublishdate(new Date());
+        messageMapper.insertSelective(message);
+        comment.setPublishdate(new Date());
         return commentMapper.insertSelective(comment);
     }
+
+
     List<CommentVo> commentToVo(List<Comment> comments){
         //返回给界面的评论集合
         List<CommentVo> commentVos = new ArrayList<>();
@@ -68,6 +92,7 @@ public class CommentServiceImpl implements CommentService {
             for (Comment commentAnswer:commentAnswers){
                 CommentAnswerVo commentAnswerVo = new CommentAnswerVo();
 
+                commentAnswerVo.setCommentId(commentAnswer.getCommentId());
                 commentAnswerVo.setCommentBody(commentAnswer.getCommentBody());
                 commentAnswerVo.setPublishdate(commentAnswer.getPublishdate());
                 commentAnswerVo.setUserNickname(userMapper.selectByPrimaryKey(commentAnswer.getUserId()).getUserNickname());

@@ -9,7 +9,7 @@ import {
   RECEIVE_NEWARTICLES,
   RECEIVE_ISSUES,
   RECEIVE_NOANSWERISSUES,
-  RECEIVE_HOTISSUES,
+  RECEIVE_HOTISSUES, RECEIVE_NOREAD, RESET_USER, RECEIVE_TAGS, MESSAGE_READ,
 } from './mutation-types'
 import {
   reqAllArticles,
@@ -19,9 +19,9 @@ import {
   reqHotIssues,
   reqNoAnswerIssues,
   reqIssuesByCategoryId,
-  reqUser,
+  login,
   reqCategory,
-  reqArticlesByCategoryId,
+  reqArticlesByCategoryId, reqNoReadNum, logout, reqTag,
 } from '../api'
 
 export default {
@@ -33,7 +33,7 @@ export default {
       commit(RECEIVE_ARTICLES, {articles})
     }
   },
-  async getArticlesByCategoryId({commit},categoryId) {
+  async getArticlesByCategoryId({commit}, categoryId) {
     const result = await reqArticlesByCategoryId(categoryId)
     if (result.status === "success") {
       const articles = result.data
@@ -75,19 +75,28 @@ export default {
       commit(RECEIVE_NOANSWERISSUES, {noAnswerIssues})
     }
   },
-  async getIssuesByCategoryId({commit},categoryId) {
+  async getIssuesByCategoryId({commit}, categoryId) {
     const result = await reqIssuesByCategoryId(categoryId)
     if (result.status === "success") {
       const issues = result.data
       commit(RECEIVE_ISSUES, {issues})
     }
   },
-  async getUser({commit},userId) {
-    const result = await reqUser(userId)
+  async getLoginUser({commit}, {username, password}) {
+    const result = await login(username, password)
     if (result.status === "success") {
       const user = result.data
       commit(RECEIVE_USER, {user})
+    } else {
+      alert("登录失败！")
     }
+  },
+  async toLogout({commit}) {
+    commit(RESET_USER)
+    const result = await logout()
+  },
+  async readMessage({commit}) {
+    commit(MESSAGE_READ)
   },
   async getCategory({commit}) {
     const result = await reqCategory()
@@ -96,4 +105,18 @@ export default {
       commit(RECEIVE_CATEGORY, {category})
     }
   },
+  async getNoreadNum({commit}, userId) {
+    const result = await reqNoReadNum(userId)
+    if (result.status === "success") {
+      const noRead = result.data
+      commit(RECEIVE_NOREAD, {noRead})
+    }
+  },
+  async getAllTags({commit}) {
+    const result = await reqTag()
+    if (result.status === "success") {
+      const tags = result.data
+      commit(RECEIVE_TAGS, {tags})
+    }
+  }
 }

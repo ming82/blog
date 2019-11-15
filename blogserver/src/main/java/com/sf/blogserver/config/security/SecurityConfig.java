@@ -51,10 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //普通管理员权限
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 //评论、发表、点赞、个人空间需登录后可用
-                .antMatchers("/comment/postComment","/article/postArticle","/article/like","/answer/postAnswer","/user/selfSpace").authenticated()
+                .antMatchers("/comment/post","/article/postArticle","/article/like","/answer/postAnswer","/user/selfSpace").authenticated()
                 //其他请求都直接允许
                 .anyRequest().permitAll()
-                .and().formLogin().loginPage("/to_login").loginProcessingUrl("/login")
+                .and().logout().permitAll()
+                .and().formLogin().loginPage("/tologin").loginProcessingUrl("/login")
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {
                     httpServletResponse.setContentType("application/json;charset=utf-8");
@@ -80,6 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             out.write(s);
             out.flush();
             out.close();
-        }).and().logout().permitAll().and().csrf().disable().exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler);
+        }).and().csrf().disable().exceptionHandling().accessDeniedHandler(authenticationAccessDeniedHandler);
     }
 }

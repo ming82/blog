@@ -1,16 +1,7 @@
 <template>
   <el-container class="shadow" style="min-height:710px;*+height:100%;_height:400px;">
     <el-header>
-      <HeaderTop>
-        <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button>个人空间 <el-badge class="mark" :value="12" /></el-button>
-        </div>
-        <div class="unlogin" slot="isLogin" v-else>
-          <el-button>登录</el-button>
-          <span>|</span>
-          <el-button>免费注册</el-button>
-        </div>
-      </HeaderTop>
+      <HeaderTop></HeaderTop>
     </el-header>
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px">

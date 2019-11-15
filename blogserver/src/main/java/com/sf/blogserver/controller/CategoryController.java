@@ -2,11 +2,9 @@ package com.sf.blogserver.controller;
 
 import com.sf.blogserver.bean.Category;
 import com.sf.blogserver.service.CategoryService;
-import com.sf.blogserver.util.ResponceUtil;
+import com.sf.blogserver.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @Discription
@@ -23,27 +21,27 @@ public class CategoryController {
     CategoryService categoryService;
 
     @GetMapping("/getAll")
-    public ResponceUtil getAllCategory(){
-        return ResponceUtil.success("查询成功",categoryService.getAllCategory());
+    public ResponseUtil getAllCategory(){
+        return ResponseUtil.success("查询成功",categoryService.getAllCategory());
     }
 
     @PostMapping("/")
-    public ResponceUtil insertCategory(Category category){
+    public ResponseUtil insertCategory(Category category){
         Integer result = categoryService.insertCategory(category);
         if (result == 1) {
-            return ResponceUtil.success("分类添加成功",null);
+            return ResponseUtil.success("分类添加成功",null);
         } else {
-            return ResponceUtil.fail("分类添加失败");
+            return ResponseUtil.fail("分类添加失败");
         }
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponceUtil deleteCategoryByPrimaryKey(@PathVariable Integer categoryId){
+    public ResponseUtil deleteCategoryByPrimaryKey(@PathVariable Integer categoryId){
         Integer result = categoryService.deleteCategoryByPrimaryKey(categoryId);
         if (result == 1) {
-            return ResponceUtil.success("分类删除成功",null);
+            return ResponseUtil.success("分类删除成功",null);
         } else {
-            return ResponceUtil.fail("分类删除失败");
+            return ResponseUtil.fail("分类删除失败");
         }
     }
 

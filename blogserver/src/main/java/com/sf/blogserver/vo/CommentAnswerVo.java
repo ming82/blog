@@ -17,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class CommentAnswerVo {
+    private Integer commentId;
 
     private String commentBody;
 

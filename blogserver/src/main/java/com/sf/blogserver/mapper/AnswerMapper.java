@@ -22,4 +22,6 @@ public interface AnswerMapper {
     int updateByPrimaryKey(Answer record);
 
     int updateToDelete(Integer answerId);
+
+    int increaseComment(Integer answerId);
 }

@@ -3,11 +3,13 @@
  */
 export default {
   articles: [],
-  hotArticles:[],
-  newArticles:[],
-  issues:[],
-  hotIssues:[],
-  noAnswerIssues:[],
+  hotArticles: [],
+  newArticles: [],
+  issues: [],
+  hotIssues: [],
+  noAnswerIssues: [],
   category: [],
-  user:{},
+  user: {},
+  tag:[],
+  noRead: 0,
 }

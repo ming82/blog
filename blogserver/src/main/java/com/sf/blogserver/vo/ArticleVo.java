@@ -3,6 +3,7 @@ package com.sf.blogserver.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -15,8 +16,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ArticleVo {
     private Integer articleId;
+
+    private Integer categoryId;
 
     private String articleTitle;
 
@@ -31,6 +35,8 @@ public class ArticleVo {
     private Date publishdate;
 
     private Date edittime;
+
+    private Integer articleStatus;
 
     private Integer articlePageviews;
 

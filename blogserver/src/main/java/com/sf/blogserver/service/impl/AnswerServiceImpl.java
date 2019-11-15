@@ -2,6 +2,7 @@ package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Answer;
 import com.sf.blogserver.mapper.AnswerMapper;
+import com.sf.blogserver.mapper.ArticleMapper;
 import com.sf.blogserver.mapper.UserMapper;
 import com.sf.blogserver.service.AnswerService;
 import com.sf.blogserver.vo.AnswerVo;

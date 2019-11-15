@@ -1,25 +1,19 @@
 <template>
   <el-container style="min-height:710px;*+height:100%;_height:400px;">
     <el-header>
-      <HeaderTop>
-        <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button >个人空间
-            <el-badge class="mark" :value="12"/>
-          </el-button>
-        </div>
-        <div class="unlogin" slot="isLogin" v-else>
-          <el-button>登录</el-button>
-          <span>|</span>
-          <el-button>免费注册</el-button>
-        </div>
-      </HeaderTop>
+      <HeaderTop></HeaderTop>
     </el-header>
     <el-container style="background-color: aliceblue; ">
       <el-aside width="200px">
         <SideGuide tag="文章分类" :categorys="category"></SideGuide>
       </el-aside>
       <el-main class="mainwidth">
-        <el-tabs type="border-card">
+        <el-tabs type="border-card" v-if="is_search">
+          <el-tab-pane label="搜索结果如下:">
+            <ArticleSummary :article="article" v-for="(article,index) in articles" :key="index"></ArticleSummary>
+          </el-tab-pane>
+        </el-tabs>
+        <el-tabs type="border-card" v-else>
           <el-tab-pane label="为你推荐">
             <ArticleSummary :article="article" v-for="(article,index) in articles" :key="index"></ArticleSummary>
           </el-tab-pane>
@@ -47,12 +41,10 @@
   import {mapState} from 'vuex'
 
   export default {
-    data() {
+    data(){
       return {
-        isLogin: true,
+        is_search: false
       }
-    },
-    methods:{
     },
     name: "MSite",
     components: {ArticleSummary, Footer, AuthorInfo, SideGuide, HeaderTop},
@@ -91,12 +83,4 @@
 
   .el-button
     border 0px
-
-  .login
-    margin-top 10px
-    margin-left 400px
-
-  .unlogin
-    margin-top 10px
-    margin-left 350px
 </style>

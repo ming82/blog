@@ -2,7 +2,7 @@ package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Article;
 import com.sf.blogserver.bean.ArticleTag;
-import com.sf.blogserver.bean.Tag;
+import com.sf.blogserver.bean.Message;
 import com.sf.blogserver.mapper.*;
 import com.sf.blogserver.service.ArticleService;
 import com.sf.blogserver.vo.ArticleVo;
@@ -34,6 +34,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     TagMapper tagMapper;
+
+    @Autowired
+    MessageMapper messageMapper;
 
     @Deprecated
     CategoryMapper categoryMapper;
@@ -91,39 +94,44 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public int likeArticle(Integer articleId) {
+    public int likeArticle(Integer articleId,Integer userId) {
+        Message message = new Message();
+        message.setArticleId(articleId);
+        message.setCommentuserid(userId);
+        message.setUserId(articleMapper.selectByPrimaryKey(articleId).getUserId());
+        message.setMessageType(1);
+        message.setPublishdate(new Date());
+        messageMapper.insertSelective(message);
         return articleMapper.increaseLike(articleId);
     }
 
     @Override
-    public int addNewArticle(Article article, List<Tag> oldTags, List<String> newTags) {
+    public int addNewArticle(ArticleVo article) {
+        //设置日期
         Date date = new Date();
         article.setPublishdate(date);
         article.setEdittime(date);
         //截取文章
-        String stripHtml = article.getMdcontent();
-        article.setArticleSummary(stripHtml.substring(0, stripHtml.length() > 100 ? 100 : stripHtml.length())+"...");
-        //新增标签，并建立关联
-        for(String tagName:newTags){
-            Tag tag = new Tag();
-            tag.setTagName(tagName);
-            tagMapper.insertSelective(tag);
+        String stripHtml = stripHtml(article.getHtmlcontent());
+        article.setArticleSummary(stripHtml.substring(0, stripHtml.length() > 50 ? 50 : stripHtml.length()));
 
+        int ret = articleMapper.insertSelective(article);
+        //建立标签关联
+        for(String tagName:article.getTags()){
             ArticleTag articleTag = new ArticleTag();
             articleTag.setArticleId(article.getArticleId());
-            articleTag.setTagId(tag.getTagId());
+            articleTag.setTagId(tagMapper.selectIdByName(tagName));
 
             articleTagMapper.insertSelective(articleTag);
         }
-        //建立文章标签关联
-        for(Tag tag:oldTags){
-            ArticleTag articleTag = new ArticleTag();
-            articleTag.setArticleId(article.getArticleId());
-            articleTag.setTagId(tag.getTagId());
+        return ret;
+    }
 
-            articleTagMapper.insertSelective(articleTag);
-        }
-        return articleMapper.insertSelective(article);
+    public String stripHtml(String content) {
+        content = content.replaceAll("<p .*?>", "");
+        content = content.replaceAll("<br\\s*/?>", "");
+        content = content.replaceAll("\\<.*?>", "");
+        return content;
     }
 
     @Override
@@ -134,6 +142,15 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public int deleteArticle(Integer articleId) {
         return articleMapper.updateToDelete(articleId);
+    }
+
+    @Override
+    public List<ArticleVo> getDraft(Integer userId) {
+        List<ArticleVo> articleVos = new ArrayList<>();
+        for(Article article:articleMapper.getDraft(userId)){
+            articleVos.add(articleToVo(article));
+        }
+        return articleVos;
     }
 
     public ArticleVo articleToVo(Article article){

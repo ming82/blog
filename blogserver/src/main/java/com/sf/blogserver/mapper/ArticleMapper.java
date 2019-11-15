@@ -1,6 +1,7 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Article;
+import com.sf.blogserver.vo.ArticleVo;
 
 import java.util.List;
 
@@ -9,13 +10,15 @@ public interface ArticleMapper {
 
     int insert(Article record);
 
-    int insertSelective(Article record);
+    int insertSelective(ArticleVo record);
 
     Article selectByPrimaryKey(Integer articleId);
 
     List<Article> selectAll();
 
     List<Article> selectByUserId(Integer userId);
+
+    List<Article> getDraft(Integer userId);
 
     List<Article> selectByCategoryId(Integer categoryId);
 

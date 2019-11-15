@@ -156,4 +156,9 @@
     set answer_status = 0,
     where answer_id = #{answerId,jdbcType=INTEGER}
   </update>
+  <update id="increaseComment" parameterType="java.lang.Integer">
+    update answer
+    set answer_comments = answer_comments +'1'
+    where answer_id = #{answerId,jdbcType=INTEGER}
+  </update>
 </mapper>

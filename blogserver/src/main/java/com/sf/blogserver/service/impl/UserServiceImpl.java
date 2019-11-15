@@ -2,6 +2,7 @@ package com.sf.blogserver.service.impl;
 
 import com.sf.blogserver.bean.Role;
 import com.sf.blogserver.bean.User;
+import com.sf.blogserver.bean.UserRole;
 import com.sf.blogserver.config.security.UserDetail;
 import com.sf.blogserver.mapper.RoleMapper;
 import com.sf.blogserver.mapper.UserMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,5 +56,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer userId) {
         return userMapper.selectByPrimaryKey(userId);
+    }
+
+    @Override
+    public int register(User user) {
+        user.setUserRegistetime(new Date());
+        int ret1 = userMapper.insertSelective(user);
+        UserRole userRole = new UserRole();
+        userRole.setUserId(user.getUserId());
+        int ret2 = userRoleMapper.insertSelective(userRole);
+        return ret1+ret2;
+    }
+
+    @Override
+    public int nameCheck(String userName) {
+        User user = userMapper.selectByUsername(userName);
+        if(user == null){
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 }

@@ -20,11 +20,13 @@ public interface ArticleService {
 
     ArticleVo getArticleById(Integer articleId);
 
-    int likeArticle(Integer articleId);
+    int likeArticle(Integer articleId,Integer userId);
 
-    int addNewArticle(Article article, List<Tag> oldTags, List<String> newTags);
+    int addNewArticle(ArticleVo article);
 
     int updateArticle(Article article);
 
     int deleteArticle(Integer articleId);
+
+    List<ArticleVo> getDraft(Integer userId);
 }

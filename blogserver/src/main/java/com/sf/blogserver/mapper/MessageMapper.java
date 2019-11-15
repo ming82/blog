@@ -11,11 +11,15 @@ public interface MessageMapper {
 
     int insertSelective(Message record);
 
+    List<Message> getNoReadMessages(Integer userId);
+
+    List<Message> getReadMessages(Integer userId);
+
+    int markRead(Integer messageId);
+
+    int countNoRead(Integer userId);
+
     Message selectByPrimaryKey(Integer messageId);
-
-    List<Message> selectAllByUserId(Integer userId);
-
-    List<Message> selectNoreadByUserId(Integer userId);
 
     int updateByPrimaryKeySelective(Message record);
 

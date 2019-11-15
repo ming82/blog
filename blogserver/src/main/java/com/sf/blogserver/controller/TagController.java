@@ -1,15 +1,11 @@
 package com.sf.blogserver.controller;
 
-import com.sf.blogserver.bean.Tag;
 import com.sf.blogserver.service.TagService;
-import com.sf.blogserver.util.ResponceUtil;
+import com.sf.blogserver.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @Discription
@@ -25,7 +21,7 @@ public class TagController {
     TagService tagService;
 
     @GetMapping("/getAll")
-    public ResponceUtil getAllTag(){
-        return ResponceUtil.success("查询成功",tagService.getAllTag());
+    public ResponseUtil getAllTag(){
+        return ResponseUtil.success("查询成功",tagService.getAllTag());
     }
 }

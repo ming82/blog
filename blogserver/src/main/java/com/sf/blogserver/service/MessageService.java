@@ -6,7 +6,11 @@ import java.util.List;
 
 public interface MessageService {
 
-    List<MessageVo> getAllByUserId(Integer userId);
+    List<MessageVo> getReadByUserId(Integer userId);
 
     List<MessageVo> getNoreadByUserId(Integer userId);
+
+    int markRead(List<Integer> list);
+
+    int countNoRead(Integer userId);
 }

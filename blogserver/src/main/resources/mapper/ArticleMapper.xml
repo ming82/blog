@@ -50,7 +50,13 @@
     select
     <include refid="Base_Column_List" />
     from article
-    where article_status > 0 and user_id = #{userId,jdbcType=INTEGER}
+    where article_status = 1 and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="getDraft" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 2 and user_id = #{userId,jdbcType=INTEGER}
   </select>
   <select id="selectByCategoryId" resultMap="BaseResultMap">
     select
@@ -74,7 +80,7 @@
       #{articleStatus,jdbcType=INTEGER}, #{articlePageviews,jdbcType=INTEGER}, #{articleLikes,jdbcType=INTEGER},
       #{articleComments,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Article">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="articleId" parameterType="com.sf.blogserver.vo.ArticleVo">
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="articleId != null">

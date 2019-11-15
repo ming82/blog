@@ -1,7 +1,10 @@
 package com.sf.blogserver.bean;
 
+import lombok.ToString;
+
 import java.util.Date;
 
+@ToString
 public class Answer {
     private Integer answerId;
 

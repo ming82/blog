@@ -17,14 +17,15 @@
       </el-col>
       <el-col :span="24" align="left" class="marginleft">
         <div v-html="answer.htmlcontent"></div>
+        <br/>
       </el-col>
-      <el-col>
-        <el-divider content-position="left">
-          <div align="left" style="color:#909399;font-size:14px;"><i class="el-icon-chat-dot-round"></i>评论</div>
-        </el-divider>
-      </el-col>
+      <!--<el-col>-->
+        <!--<el-divider content-position="left">-->
+          <!--<div align="left" style="color:#909399;font-size:14px;"><i class="el-icon-chat-dot-round"></i>评论</div>-->
+        <!--</el-divider>-->
+      <!--</el-col>-->
     </el-row>
-    <Comments :comment="comment" v-for="(comment,index) in comments" :key="index"></Comments>
+    <!--<Comments :comment="comment" v-for="(comment,index) in comments" :key="index"></Comments>-->
   </div>
 </template>
 

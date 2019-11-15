@@ -39,7 +39,7 @@
       #{userPassword,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER}, #{userEmail,jdbcType=VARCHAR},
       #{userPicture,jdbcType=VARCHAR}, #{userRegistetime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.User">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="userId" parameterType="com.sf.blogserver.bean.User">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">

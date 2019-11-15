@@ -1,18 +1,7 @@
 <template>
   <el-container style="min-height:710px;*+height:100%;_height:400px;">
     <el-header>
-      <HeaderTop>
-        <div class="login" slot="isLogin" v-if="isLogin">
-          <el-button>个人空间
-            <el-badge class="mark" :value="12"/>
-          </el-button>
-        </div>
-        <div class="unlogin" slot="isLogin" v-else>
-          <el-button>登录</el-button>
-          <span>|</span>
-          <el-button>免费注册</el-button>
-        </div>
-      </HeaderTop>
+      <HeaderTop></HeaderTop>
     </el-header>
     <el-container style="background-color: aliceblue;">
       <el-aside width="200px">
@@ -23,7 +12,12 @@
         <div v-for="(answer,index) in answers" :key="index">
           <Answers :count="index" :answer="answer"></Answers>
         </div>
-        <Answer></Answer>
+        <Answer v-if="user.userId" :issueId="this.issue.issueId"></Answer>
+        <div v-else>
+          <br/>
+          <span >请先登录后发表回答</span>
+          <br/>
+        </div>
       </el-main>
     </el-container>
     <el-footer>
@@ -43,6 +37,7 @@
   import Answer from "../../components/Answer/Answer";
   import Message from "../../components/Message/Message";
   import {reqIssue,reqAnswerByIssueId} from "../../api";
+  import {mapState} from "vuex";
 
   export default {
     data() {
@@ -64,6 +59,9 @@
           this.answers = result.data
         }
       })
+    },
+    computed: {
+      ...mapState(['user']),
     },
     components: {Message, Answer, Answers, IssueDetail, Comments, Footer, HeaderTop, AuthorInfo, SideGuide}
   }

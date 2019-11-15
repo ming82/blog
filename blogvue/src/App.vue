@@ -1,7 +1,7 @@
 <template>
   <div id="app" style="background-color: rgba(235, 235, 235, 0.08)">
-    <router-view/>
-  </div>
+  <router-view v-if="isRouterAlive"/>
+</div>
 </template>
 
 <script>
@@ -11,10 +11,24 @@ export default {
   mounted () {
     // this.$store.dispatch('getAddress')
     this.getCategory()
+    this.getAllTags()
   },
-
+  provide(){
+    return {
+      reload:this.reload
+    }
+  },
+  data(){
+    return{
+      isRouterAlive: true
+    }
+  },
   methods: {
-    ...mapActions(['getCategory'])
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(() => (this.isRouterAlive = true))
+    },
+    ...mapActions(['getCategory','getAllTags'])
   },
 }
 </script>

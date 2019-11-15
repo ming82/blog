@@ -44,7 +44,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   .time
-    margin-left  600px
+    margin-left  500px
   .articlehref
     cursor pointer
     text-decoration none
