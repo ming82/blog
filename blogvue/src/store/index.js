@@ -16,5 +16,10 @@ export default new Vuex.Store({
   mutations,
   actions,
   getters,
-  plugins: [persistedState()]
+  // 使用localstorage
+  // plugins: [persistedState()]
+  // 使用sessionStorage
+  plugins: [
+    persistedState({ storage: window.sessionStorage })
+  ]
 })
