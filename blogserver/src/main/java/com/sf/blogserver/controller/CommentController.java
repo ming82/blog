@@ -6,13 +6,6 @@ import com.sf.blogserver.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @Discription
- * @author Hh
- * @package com.sf.blogserver.controller
- * @create 2019/10/27 17:02
- * @Version: 1.0
- */
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
@@ -39,7 +32,7 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/post")
+    @PostMapping("/")
     public ResponseUtil addNewComment(@RequestBody Comment comment){
         int result = commentService.addNewComment(comment);
         if (result == 1) {

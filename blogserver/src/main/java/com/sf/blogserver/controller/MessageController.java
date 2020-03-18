@@ -8,13 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @Discription
- * @author Hh
- * @package com.sf.blogserver.controller
- * @create 2019/10/27 20:47
- * @Version: 1.0
- */
 @RestController
 @RequestMapping("/message")
 public class MessageController {

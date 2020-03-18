@@ -1,20 +1,12 @@
 package com.sf.blogserver.controller;
 
-import com.sf.blogserver.bean.Article;
-import com.sf.blogserver.bean.Tag;
+import com.sf.blogserver.query.ArticleQuery;
 import com.sf.blogserver.service.ArticleService;
 import com.sf.blogserver.util.ResponseUtil;
 import com.sf.blogserver.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-/**
- * @author 92802
- * @date 2019/10/31
- */
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
@@ -22,9 +14,9 @@ public class ArticleController {
     @Autowired
     ArticleService articleService;
 
-    @GetMapping("/getAll")
-    public ResponseUtil getAllArticles(){
-        return ResponseUtil.success("查询成功",articleService.getAllArticle());
+    @GetMapping("/getList")
+    public ResponseUtil getArticlesList(ArticleQuery query){
+        return ResponseUtil.success("查询成功",articleService.getArticles(query));
     }
 
     @GetMapping("/getHots")
@@ -44,8 +36,6 @@ public class ArticleController {
 
     @GetMapping("/like")
     public ResponseUtil likeArticle(Integer articleId, Integer userId){
-        System.out.println(articleId);
-        System.out.println(userId);
         return ResponseUtil.success("已点赞",articleService.likeArticle(articleId,userId));
     }
 
@@ -75,7 +65,7 @@ public class ArticleController {
     }
 
     @PutMapping("/")
-    public ResponseUtil editArticle(Article article){
+    public ResponseUtil editArticle(@RequestBody ArticleVo article){
         int result = articleService.updateArticle(article);
         if (result == 1) {
             return ResponseUtil.success("文章更新成功");

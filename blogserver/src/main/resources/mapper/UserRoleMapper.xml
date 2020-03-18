@@ -25,6 +25,10 @@
     delete from user_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByUidRid" parameterType="java.lang.Integer">
+    delete from user_role
+    where user_id = #{userId} and role_id = #{roleId}
+  </delete>
   <insert id="insert" parameterType="com.sf.blogserver.bean.UserRole">
     insert into user_role (id, role_id, user_id
       )

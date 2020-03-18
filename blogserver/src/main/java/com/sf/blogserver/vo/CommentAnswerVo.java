@@ -25,7 +25,11 @@ public class CommentAnswerVo {
 
     private Integer userId;
 
-    private String commentParentUserNickname;
-
     private String userNickname;
+
+    private String commentTo;
+
+    private Integer commentToUserId;
+
+    private String userPicture;
 }

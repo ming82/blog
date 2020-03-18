@@ -1,21 +1,27 @@
 <template>
-  <div class="shadow" align="left" style="margin-left: 15px;">
+  <div class="shadow" align="left" >
     <div style="margin-left: 10px;">
-      <img src="../AuthorInfo/image/picture.png" style="width: 30px;height: 30px">
-      <a style="text-decoration: none;" href="">{{comment.userNickname}}</a>
-      <span style="color:#909399;font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{comment.publishdate}}</span>
+      <img @click="toUser(comment.userId)" :src="comment.userPicture" style="cursor:pointer;width: 30px;height: 30px;border-radius: 50px">
+      <a @click="toUser(comment.userId)" style="text-decoration: none;cursor: pointer">{{comment.userNickname}}</a>
+      <span style="color:#909399;font-size:14px;margin-left: 40px">{{comment.publishdate}}</span>
     </div>
+    <br>
     <div>
-      <span style="cursor: pointer" v-if="user.userId" @click="answer(comment.commentId)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{comment.commentBody}}</span>
-      <span style="cursor: pointer" v-else @click="noLogin()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{comment.commentBody}}</span>
+      <span style="margin-left: 40px">{{comment.commentBody}}</span>
+      <a style="float: right;font-size: 12px;cursor: pointer;color: dodgerblue;margin-right: 10px" @click="showAnswer"
+         v-if="comment.commentAnswers.length != 0">展开回复({{comment.commentAnswers.length}})</a>
+      <a style="float: right;font-size: 12px;cursor: pointer;color: dodgerblue;margin-right: 20px" @click="answer(comment.commentId,comment.userNickname)">回复</a>
     </div>
-    <div class="comment" style="margin-left: 40px;background-color: #f2f2f2">
+    <br>
+    <div class="comment" style="margin-left: 40px;background-color: #f2f2f2" v-if="isShowAnswer">
       <div v-for="(commentAnswer,index) in comment.commentAnswers" :key="index">
-        <img src="../AuthorInfo/image/picture.png" class="image"><a class="namehref" href="">{{commentAnswer.userNickname}}</a>
-        回复
-        <img src="../AuthorInfo/image/picture.png" class="image"><a class="namehref" href="">{{commentAnswer.commentParentUserNickname}}</a>:
+        <img @click="toUser(commentAnswer.userId)" :src="commentAnswer.userPicture" class="image" style="cursor:pointer;width: 30px;height: 30px;border-radius: 50px">
+        <a @click="toUser(commentAnswer.userId)" style="cursor: pointer" class="namehref">{{commentAnswer.userNickname}}</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;回复&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="namehref" style="cursor: pointer" @click="toUser(commentAnswer.commentToUserId)">{{commentAnswer.commentTo}}</a>&nbsp;&nbsp;:
         <span>{{commentAnswer.commentBody}}</span>
-        <!--<p><span style="text-align: right;margin-right: 2px;">{{commentAnswer.publishdate}}</span></p>-->
+        <a style="float: right;font-size: 12px;cursor: pointer;color: #909399;margin-right: 20px" @click="answer(comment.commentId,commentAnswer.userNickname)">回复</a>
+<!--        <span style="text-align: right;margin-right: 2px;float: right">{{commentAnswer.publishdate}}</span>-->
       </div>
     </div>
     <br/>
@@ -24,21 +30,35 @@
 
 <script>
   import {mapState} from "vuex";
-  import {postComment} from "../../api";
+  import {postComment} from "../../api/comment";
 
   export default {
     name: "Comments",
     props: {
-      comment: [],
+      comment: Object,
+    },
+    data(){
+      return{
+        isShowAnswer: false
+      }
     },
     inject:["reload"],
     methods:{
-      answer(parentId){
+      toUser(userId){
+        this.$router.push({
+          path: `/userpage/${userId}`,
+        })
+      },
+      answer(parentId,commentTo){
+        if(!this.user.userId){
+          this.$message.warning("登录后可回复")
+          return
+        }
         this.$prompt('回复', {
           confirmButtonText: '发表',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          postComment(value,null,null,parentId,this.user.userId).then(result=>{
+          postComment(value,null,null,parentId,this.user.userId,commentTo).then(result=>{
             if(result.status === "success"){
               this.$message.success(result.resMsg)
               this.reload()
@@ -47,10 +67,9 @@
             }
           })
         })
-
       },
-      noLogin(){
-        this.$message.warning("登录后可回复")
+      showAnswer(){
+        this.isShowAnswer = !this.isShowAnswer
       }
     },
     computed:{

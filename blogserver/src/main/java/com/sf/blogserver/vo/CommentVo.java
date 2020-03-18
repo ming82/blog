@@ -28,6 +28,8 @@ public class CommentVo {
 
     private Integer userId;
 
+    private String userPicture;
+
     private String userNickname;
 
     private List<CommentAnswerVo> commentAnswers;

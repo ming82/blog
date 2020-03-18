@@ -16,6 +16,8 @@ import java.util.Date;
 public class IssueVo {
     private Integer issueId;
 
+    private Integer categoryId;
+
     private String issueTitle;
 
     private String mdcontent;
@@ -23,6 +25,8 @@ public class IssueVo {
     private String htmlcontent;
 
     private Integer userId;
+
+    private String userPicture;
 
     private Date publishdate;
 

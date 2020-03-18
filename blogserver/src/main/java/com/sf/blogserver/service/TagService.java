@@ -13,4 +13,6 @@ public interface TagService {
     int insertTag(Tag tag);
 
     int deleteTag(Integer tagId);
+
+    int update(Tag tag);
 }

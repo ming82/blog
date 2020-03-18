@@ -18,6 +18,8 @@ public class MessageVo {
 
     private Integer userId;
 
+    private String userPicture;
+
     private Integer commentuserid;
 
     private String commentuserNickName;
@@ -31,4 +33,6 @@ public class MessageVo {
     private Integer messageIsread;
 
     private Date publishdate;
+
+    private String commentBody;
 }

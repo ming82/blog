@@ -1,25 +1,25 @@
 package com.sf.blogserver.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sf.blogserver.query.ArticleQuery;
 import com.sf.blogserver.bean.Article;
 import com.sf.blogserver.bean.ArticleTag;
 import com.sf.blogserver.bean.Message;
+import com.sf.blogserver.bean.User;
 import com.sf.blogserver.mapper.*;
 import com.sf.blogserver.service.ArticleService;
 import com.sf.blogserver.vo.ArticleVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @Discription
- * @auther Hh
- * @package com.sf.blogserver.service.impl
- * @create 2019/10/25 16:14
- * @Version: 1.0
- */
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
@@ -40,20 +40,34 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Deprecated
     CategoryMapper categoryMapper;
+    @Value("${image_url}")
+    String IMAGE_URL;
 
     @Override
-    public List<ArticleVo> getAllArticle() {
+    public PageInfo getArticles(ArticleQuery query) {
+        if(query.getUserId() == null&&query.getUserNickname() != null&&query.getUserNickname() != ""){
+            User user = userMapper.selectByUserNickname(query.getUserNickname());
+            if(user == null){
+                return new PageInfo();
+            }else {
+                query.setUserId(user.getUserId());
+            }
+        }
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        List<Article> articles = articleMapper.selectByQuery(query);
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.selectAll()){
+        PageInfo pageInfo = new PageInfo<>(articles);
+        for (Article article : articles) {
             articleVos.add(articleToVo(article));
         }
-        return articleVos;
+        pageInfo.setList(articleVos);
+        return pageInfo;
     }
 
     @Override
     public List<ArticleVo> getArticlesByCategoryId(Integer categoryId) {
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.selectByCategoryId(categoryId)){
+        for (Article article : articleMapper.selectByCategoryId(categoryId)) {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
@@ -62,7 +76,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleVo> getHotArticles() {
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.getHotArticles()){
+        for (Article article : articleMapper.getHotArticles()) {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
@@ -71,7 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleVo> getNewArticles() {
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.getNewArticles()){
+        for (Article article : articleMapper.getNewArticles()) {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
@@ -80,7 +94,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleVo> getArticlesByUserId(Integer userId) {
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.selectByUserId(userId)){
+        for (Article article : articleMapper.selectByUserId(userId)) {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
@@ -93,8 +107,9 @@ public class ArticleServiceImpl implements ArticleService {
         return articleToVo(articleMapper.selectByPrimaryKey(articleId));
     }
 
+    @Transactional
     @Override
-    public int likeArticle(Integer articleId,Integer userId) {
+    public int likeArticle(Integer articleId, Integer userId) {
         Message message = new Message();
         message.setArticleId(articleId);
         message.setCommentuserid(userId);
@@ -117,7 +132,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         int ret = articleMapper.insertSelective(article);
         //建立标签关联
-        for(String tagName:article.getTags()){
+        for (String tagName : article.getTags()) {
             ArticleTag articleTag = new ArticleTag();
             articleTag.setArticleId(article.getArticleId());
             articleTag.setTagId(tagMapper.selectIdByName(tagName));
@@ -135,8 +150,36 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public int updateArticle(Article article) {
-        return articleMapper.updateByPrimaryKeySelective(article);
+    public int updateArticle(ArticleVo article) {
+        //设置编辑日期
+        Date date = new Date();
+        article.setEdittime(date);
+        //截取文章
+        String stripHtml = stripHtml(article.getHtmlcontent());
+        article.setArticleSummary(stripHtml.substring(0, stripHtml.length() > 50 ? 50 : stripHtml.length()));
+
+        int ret = articleMapper.updateByPrimaryKeySelective(article);
+        //修改标签关联
+        List<ArticleTag> articleTagsOld = articleTagMapper.selectByAid(article.getArticleId());
+        for (String tagName : article.getTags()) {
+            ArticleTag articleTag = articleTagMapper.selectByAidTid(article.getArticleId(),tagMapper.selectIdByName(tagName));
+            if(articleTag == null){
+                //如果是新增的关联
+                ArticleTag articleTagN = new ArticleTag();
+                articleTagN.setArticleId(article.getArticleId());
+                articleTagN.setTagId(tagMapper.selectIdByName(tagName));
+
+                articleTagMapper.insertSelective(articleTagN);
+            }else {
+                //如果是原有的关联
+                articleTagsOld.remove(articleTag);
+            }
+        }
+        // 移除删除的关联
+        for(ArticleTag articleTag: articleTagsOld){
+            articleTagMapper.deleteByPrimaryKey(articleTag.getId());
+        }
+        return ret;
     }
 
     @Override
@@ -147,35 +190,32 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleVo> getDraft(Integer userId) {
         List<ArticleVo> articleVos = new ArrayList<>();
-        for(Article article:articleMapper.getDraft(userId)){
+        for (Article article : articleMapper.getDraft(userId)) {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
     }
 
-    public ArticleVo articleToVo(Article article){
-            ArticleVo articleVo = new ArticleVo();
-            //注入已有属性
-            articleVo.setArticleId(article.getArticleId());
-            articleVo.setArticleTitle(article.getArticleTitle());
-            articleVo.setArticleComments(article.getArticleComments());
-            articleVo.setArticleLikes(article.getArticleLikes());
-            articleVo.setArticlePageviews(article.getArticlePageviews());
-            articleVo.setArticleSummary(article.getArticleSummary());
-            articleVo.setPublishdate(article.getPublishdate());
-            articleVo.setEdittime(article.getEdittime());
-            articleVo.setHtmlcontent(article.getHtmlcontent());
-            articleVo.setMdcontent(article.getMdcontent());
-            articleVo.setUserId(article.getUserId());
-            //获取用户昵称
-            articleVo.setUserNickname(userMapper.selectByPrimaryKey(article.getUserId()).getUserNickname());
-            //获取文章标签
-            List<String> tags = new ArrayList<>();
-            List<Integer> tagIds = articleTagMapper.selectTagIdByArticleId(article.getArticleId());
-            for (int tagId:tagIds){
-                tags.add(tagMapper.selectByPrimaryKey(tagId).getTagName());
-            }
-            articleVo.setTags(tags);
+    @Override
+    public List<ArticleVo> searchArticle(String keyword) {
+        return null;
+    }
+
+    public ArticleVo articleToVo(Article article) {
+        ArticleVo articleVo = new ArticleVo();
+        //注入已有属性
+        BeanUtils.copyProperties(article,articleVo);
+        //获取用户昵称,头像
+        User user = userMapper.selectByPrimaryKey(article.getUserId());
+        articleVo.setUserNickname(user.getUserNickname());
+        articleVo.setUserPicture(IMAGE_URL+user.getUserPicture());
+        //获取文章标签
+        List<String> tags = new ArrayList<>();
+        List<Integer> tagIds = articleTagMapper.selectTagIdByArticleId(article.getArticleId());
+        for (int tagId : tagIds) {
+            tags.add(tagMapper.selectByPrimaryKey(tagId).getTagName());
+        }
+        articleVo.setTags(tags);
 
         return articleVo;
     }

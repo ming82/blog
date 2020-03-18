@@ -6,13 +6,6 @@ import com.sf.blogserver.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @Discription
- * @author Hh
- * @package com.sf.blogserver.controller
- * @create 2019/10/28 8:54
- * @Version: 1.0
- */
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -21,27 +14,39 @@ public class CategoryController {
     CategoryService categoryService;
 
     @GetMapping("/getAll")
-    public ResponseUtil getAllCategory(){
-        return ResponseUtil.success("查询成功",categoryService.getAllCategory());
+    public ResponseUtil getAllCategory() {
+        return ResponseUtil.success("查询成功", categoryService.getAllCategory());
     }
 
     @PostMapping("/")
-    public ResponseUtil insertCategory(Category category){
+    public ResponseUtil insertCategory(@RequestBody Category category) {
         Integer result = categoryService.insertCategory(category);
         if (result == 1) {
-            return ResponseUtil.success("分类添加成功",null);
+            return ResponseUtil.success("栏目添加成功", null);
         } else {
-            return ResponseUtil.fail("分类添加失败");
+            return ResponseUtil.fail("栏目添加失败");
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseUtil updateCategory(@RequestBody Category category) {
+        int result = categoryService.update(category);
+        if (result == 1) {
+            return ResponseUtil.success("栏目编辑成功");
+        } else {
+            return ResponseUtil.fail("栏目编辑失败");
         }
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseUtil deleteCategoryByPrimaryKey(@PathVariable Integer categoryId){
+    public ResponseUtil deleteCategoryByPrimaryKey(@PathVariable Integer categoryId) {
         Integer result = categoryService.deleteCategoryByPrimaryKey(categoryId);
         if (result == 1) {
-            return ResponseUtil.success("分类删除成功",null);
+            return ResponseUtil.success("栏目删除成功", null);
+        } else if (result == -1) {
+            return ResponseUtil.fail("栏目有所属文章或提问，无法删除");
         } else {
-            return ResponseUtil.fail("分类删除失败");
+            return ResponseUtil.fail("栏目删除失败");
         }
     }
 

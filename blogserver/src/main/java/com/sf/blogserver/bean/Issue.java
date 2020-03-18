@@ -21,6 +21,8 @@ public class Issue {
 
     private Integer issueAnswers;
 
+    private Integer issueFavorites;
+
     public Integer getIssueId() {
         return issueId;
     }
@@ -91,5 +93,13 @@ public class Issue {
 
     public void setIssueAnswers(Integer issueAnswers) {
         this.issueAnswers = issueAnswers;
+    }
+
+    public Integer getIssueFavorites() {
+        return issueFavorites;
+    }
+
+    public void setIssueFavorites(Integer issueFavorites) {
+        this.issueFavorites = issueFavorites;
     }
 }

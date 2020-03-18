@@ -29,6 +29,8 @@ public class Article {
 
     private Integer articleComments;
 
+    private Integer articleFavorites;
+
     public Integer getArticleId() {
         return articleId;
     }
@@ -131,5 +133,13 @@ public class Article {
 
     public void setArticleComments(Integer articleComments) {
         this.articleComments = articleComments;
+    }
+
+    public Integer getArticleFavorites() {
+        return articleFavorites;
+    }
+
+    public void setArticleFavorites(Integer articleFavorites) {
+        this.articleFavorites = articleFavorites;
     }
 }

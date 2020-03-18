@@ -7,13 +7,14 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="article_id" jdbcType="INTEGER" property="articleId" />
     <result column="answer_id" jdbcType="INTEGER" property="answerId" />
+    <result column="comment_id" jdbcType="INTEGER" property="commentId" />
     <result column="message_type" jdbcType="INTEGER" property="messageType" />
     <result column="message_isread" jdbcType="INTEGER" property="messageIsread" />
     <result column="publishDate" jdbcType="TIMESTAMP" property="publishdate" />
   </resultMap>
   <sql id="Base_Column_List">
-    message_id, commentUserId, user_id, article_id, answer_id, message_type, message_isread,
-    publishDate
+    message_id, commentUserId, user_id, article_id, answer_id,comment_id, message_type,
+    message_isread,publishDate
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -71,6 +72,9 @@
       <if test="answerId != null">
         answer_id,
       </if>
+      <if test="commentId != null">
+        comment_id,
+      </if>
       <if test="messageType != null">
         message_type,
       </if>
@@ -96,6 +100,9 @@
       </if>
       <if test="answerId != null">
         #{answerId,jdbcType=INTEGER},
+      </if>
+      <if test="commentId != null">
+        #{commentId,jdbcType=INTEGER},
       </if>
       <if test="messageType != null">
         #{messageType,jdbcType=INTEGER},

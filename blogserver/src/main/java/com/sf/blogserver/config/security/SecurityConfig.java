@@ -16,9 +16,6 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import java.io.PrintWriter;
 
-/**
- * @author 92802
- */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

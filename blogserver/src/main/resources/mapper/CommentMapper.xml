@@ -10,10 +10,11 @@
     <result column="comment_parentId" jdbcType="INTEGER" property="commentParentid" />
     <result column="comment_status" jdbcType="INTEGER" property="commentStatus" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="comment_to" jdbcType="VARCHAR" property="commentTo" />
   </resultMap>
   <sql id="Base_Column_List">
     comment_id, article_id, answer_id, comment_body, publishDate, comment_parentId, comment_status,
-    user_id
+    user_id,comment_to
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -26,18 +27,21 @@
     <include refid="Base_Column_List" />
     from comment
     where answer_id = #{answerId,jdbcType=INTEGER} and comment_status > 0
+    order by publishDate desc
   </select>
   <select id="selectByArticleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from comment
     where article_id = #{articleId,jdbcType=INTEGER} and comment_status > 0
+    order by publishDate desc
   </select>
   <select id="selectByParentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from comment
     where comment_parentId = #{parentId,jdbcType=INTEGER} and comment_status > 0
+    order by publishDate desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from comment
@@ -51,7 +55,7 @@
       #{commentBody,jdbcType=VARCHAR}, #{publishdate,jdbcType=TIMESTAMP}, #{commentParentid,jdbcType=INTEGER},
       #{commentStatus,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.sf.blogserver.bean.Comment">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="commentId"  parameterType="com.sf.blogserver.bean.Comment">
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="commentId != null">
@@ -78,6 +82,9 @@
       <if test="userId != null">
         user_id,
       </if>
+      <if test="commentTo != null">
+        comment_to,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="commentId != null">
@@ -103,6 +110,9 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="commentTo != null">
+        #{commentTo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

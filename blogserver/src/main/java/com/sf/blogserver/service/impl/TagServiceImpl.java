@@ -11,13 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Discription
- * @auther Hh
- * @package com.sf.blogserver.service.impl
- * @create 2019/10/27 18:21
- * @Version: 1.0
- */
 @Service
 public class TagServiceImpl implements TagService {
     @Autowired
@@ -48,6 +41,15 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public int deleteTag(Integer tagId) {
-        return tagMapper.deleteByPrimaryKey(tagId);
+        if(articleTagMapper.selectByTagId(tagId).size() > 0){
+            return -1;
+        }else {
+            return tagMapper.deleteByPrimaryKey(tagId);
+        }
+    }
+
+    @Override
+    public int update(Tag tag) {
+        return tagMapper.updateByPrimaryKeySelective(tag);
     }
 }

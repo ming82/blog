@@ -2,44 +2,25 @@
 通过mutation间接更新state的多个方法的对象
  */
 import {
-  RECEIVE_ARTICLES,
   RECEIVE_USER,
   RECEIVE_CATEGORY,
   RECEIVE_HOTARTICLES,
   RECEIVE_NEWARTICLES,
-  RECEIVE_ISSUES,
   RECEIVE_NOANSWERISSUES,
   RECEIVE_HOTISSUES, RECEIVE_NOREAD, RESET_USER, RECEIVE_TAGS, MESSAGE_READ,
 } from './mutation-types'
+import {reqHotArticles, reqNewArticles,} from '../api/article'
+import {reqHotIssues, reqNoAnswerIssues,} from '../api/issue'
+import {login, logout} from "../api/user";
+import {reqCategory} from "../api/category";
+import {reqNoReadNum} from "../api/message";
+import {reqTag} from "../api/tag";
+
 import {
-  reqAllArticles,
-  reqHotArticles,
-  reqNewArticles,
-  reqAllIssues,
-  reqHotIssues,
-  reqNoAnswerIssues,
-  reqIssuesByCategoryId,
-  login,
-  reqCategory,
-  reqArticlesByCategoryId, reqNoReadNum, logout, reqTag,
-} from '../api'
+  Message
+} from 'element-ui'
 
 export default {
-
-  async getAllArticles({commit}) {
-    const result = await reqAllArticles()
-    if (result.status === "success") {
-      const articles = result.data
-      commit(RECEIVE_ARTICLES, {articles})
-    }
-  },
-  async getArticlesByCategoryId({commit}, categoryId) {
-    const result = await reqArticlesByCategoryId(categoryId)
-    if (result.status === "success") {
-      const articles = result.data
-      commit(RECEIVE_ARTICLES, {articles})
-    }
-  },
   async getHotArticles({commit}) {
     const result = await reqHotArticles()
     if (result.status === "success") {
@@ -52,13 +33,6 @@ export default {
     if (result.status === "success") {
       const newArticles = result.data
       commit(RECEIVE_NEWARTICLES, {newArticles})
-    }
-  },
-  async getAllIssues({commit}) {
-    const result = await reqAllIssues()
-    if (result.status === "success") {
-      const issues = result.data
-      commit(RECEIVE_ISSUES, {issues})
     }
   },
   async getHotIssues({commit}) {
@@ -75,22 +49,23 @@ export default {
       commit(RECEIVE_NOANSWERISSUES, {noAnswerIssues})
     }
   },
-  async getIssuesByCategoryId({commit}, categoryId) {
-    const result = await reqIssuesByCategoryId(categoryId)
-    if (result.status === "success") {
-      const issues = result.data
-      commit(RECEIVE_ISSUES, {issues})
-    }
-  },
   async getLoginUser({commit}, {username, password}) {
     const result = await login(username, password)
     if (result.status === "success") {
       const user = result.data
       commit(RECEIVE_USER, {user})
+      Message({
+        message: '登录成功',
+        type: 'success'
+      })
     } else {
-      alert("登录失败！")
+      Message({
+        message: result.msg,
+        type: 'error'
+      })
     }
   },
+
   async toLogout({commit}) {
     commit(RESET_USER)
     const result = await logout()

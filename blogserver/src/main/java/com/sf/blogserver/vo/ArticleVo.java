@@ -1,5 +1,7 @@
 package com.sf.blogserver.vo;
 
+import com.github.pagehelper.Page;
+import com.sf.blogserver.bean.Article;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +34,8 @@ public class ArticleVo {
 
     private Integer userId;
 
+    private String userPicture;
+
     private Date publishdate;
 
     private Date edittime;
@@ -47,4 +51,6 @@ public class ArticleVo {
     private String userNickname;
 
     private List<String> tags;
+
+    private Integer articleFavorites;
 }

@@ -5,10 +5,6 @@ import com.sf.blogserver.vo.AnswerVo;
 
 import java.util.List;
 
-/**
- * @author 92802
- * @date 2019/11/4
- */
 public interface AnswerService {
     List<AnswerVo> getAnswersByIssueId(Integer issueId);
 
@@ -17,4 +13,6 @@ public interface AnswerService {
     int addAnswer(Answer answer);
 
     int deleteAnswer(Integer answerId);
+
+    Answer getAnswerById(Integer answerId);
 }

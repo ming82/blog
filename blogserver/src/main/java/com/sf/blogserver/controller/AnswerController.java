@@ -7,10 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-/**
- * @author 92802
- * @date 2019/11/4
- */
 @RestController
 @RequestMapping("/answer")
 public class AnswerController {
@@ -26,6 +22,11 @@ public class AnswerController {
     @GetMapping("/getAnswerByUserId")
     public ResponseUtil getAnswerByUserId(Integer userId) {
         return ResponseUtil.success("查询成功", answerService.getAnswersByUserId(userId));
+    }
+
+    @GetMapping("/{answerId}")
+    public ResponseUtil getAnswerById(@PathVariable Integer answerId) {
+        return ResponseUtil.success("查询成功", answerService.getAnswerById(answerId));
     }
 
     @PostMapping("/")

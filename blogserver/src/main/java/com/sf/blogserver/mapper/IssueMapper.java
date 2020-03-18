@@ -1,6 +1,7 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Issue;
+import com.sf.blogserver.query.IssueQuery;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public interface IssueMapper {
 
     int increaseAnswers(Integer issueId);
 
+    int increaseFavorites(Integer issueId);
+
     List<Issue> selectByCategoryId(Integer categoryId);
 
     List<Issue> selectByUserId(Integer userId);
@@ -30,4 +33,6 @@ public interface IssueMapper {
     int updateByPrimaryKey(Issue record);
 
     int updateToDelete(Integer issueId);
+
+    List<Issue> selectByQuery(IssueQuery query);
 }

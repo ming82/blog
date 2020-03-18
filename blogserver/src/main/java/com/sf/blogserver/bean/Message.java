@@ -13,6 +13,8 @@ public class Message {
 
     private Integer answerId;
 
+    private Integer commentId;
+
     private Integer messageType;
 
     private Integer messageIsread;
@@ -57,6 +59,14 @@ public class Message {
 
     public void setAnswerId(Integer answerId) {
         this.answerId = answerId;
+    }
+
+    public Integer getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Integer commentId) {
+        this.commentId = commentId;
     }
 
     public Integer getMessageType() {

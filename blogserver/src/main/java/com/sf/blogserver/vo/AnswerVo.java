@@ -24,6 +24,8 @@ public class AnswerVo {
 
     private Integer userId;
 
+    private String userPicture;
+
     private Date publishdate;
 
     private String userNickname;

@@ -10,10 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * @author 92802
- * @date 2019/11/5
- */
 @Component
 public class AuthenticationAccessDeniedHandler implements AccessDeniedHandler {
     @Override

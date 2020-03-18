@@ -1,11 +1,16 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.User;
+import com.sf.blogserver.query.UserQuery;
+
+import java.util.List;
 
 public interface UserMapper {
-    int deleteByPrimaryKey(Integer userId);
+    List<User> selectByQuery(UserQuery query);
 
     User selectByUsername(String userName);
+
+    User selectByUserNickname(String userNickname);
 
     int insert(User record);
 
@@ -16,4 +21,6 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    int deleteByPrimaryKey(Integer userId);
 }

@@ -1,10 +1,15 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.ArticleTag;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface ArticleTagMapper {
+    ArticleTag selectByAidTid(@Param("articleId") Integer articleId,@Param("tagId") Integer tagId);
+
+    List<ArticleTag> selectByAid(Integer articleId);
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(ArticleTag record);
@@ -18,4 +23,6 @@ public interface ArticleTagMapper {
     int updateByPrimaryKeySelective(ArticleTag record);
 
     int updateByPrimaryKey(ArticleTag record);
+
+    List<ArticleTag> selectByTagId(Integer tagId);
 }

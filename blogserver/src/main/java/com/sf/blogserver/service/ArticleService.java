@@ -1,14 +1,14 @@
 package com.sf.blogserver.service;
 
 
-import com.sf.blogserver.bean.Article;
-import com.sf.blogserver.bean.Tag;
+import com.github.pagehelper.PageInfo;
+import com.sf.blogserver.query.ArticleQuery;
 import com.sf.blogserver.vo.ArticleVo;
 
 import java.util.List;
 
 public interface ArticleService {
-    List<ArticleVo> getAllArticle();
+    PageInfo getArticles(ArticleQuery query);
 
     List<ArticleVo> getArticlesByCategoryId(Integer categoryId);
 
@@ -24,9 +24,11 @@ public interface ArticleService {
 
     int addNewArticle(ArticleVo article);
 
-    int updateArticle(Article article);
+    int updateArticle(ArticleVo article);
 
     int deleteArticle(Integer articleId);
 
     List<ArticleVo> getDraft(Integer userId);
+
+    List<ArticleVo> searchArticle(String keyword);
 }

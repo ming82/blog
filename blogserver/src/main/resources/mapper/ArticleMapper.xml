@@ -15,11 +15,12 @@
     <result column="article_pageviews" jdbcType="INTEGER" property="articlePageviews" />
     <result column="article_likes" jdbcType="INTEGER" property="articleLikes" />
     <result column="article_comments" jdbcType="INTEGER" property="articleComments" />
+    <result column="article_favorites" jdbcType="INTEGER" property="articleFavorites" />
   </resultMap>
   <sql id="Base_Column_List">
     article_id, article_title, mdContent, htmlContent, article_summary, category_id,
     user_id, publishDate, editTime, article_status, article_pageviews, article_likes,
-    article_comments
+    article_comments,article_favorites
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -33,11 +34,27 @@
     from article
     where article_status = 1
   </select>
+  <select id="selectByQuery" parameterType="com.sf.blogserver.query.ArticleQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1
+    <if test="userId != null">
+      and user_id = #{userId}
+    </if>
+    <if test="categoryId != null">
+      and category_id = #{categoryId}
+    </if>
+    <if test="keyword != null">
+      and article_title like CONCAT('%',#{keyword},'%')
+    </if>
+  </select>
   <select id="getHotArticles" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from article
     where article_status = 1 and article_likes > 10
+    order by  publishDate desc limit 0,8
   </select>
   <select id="getNewArticles" resultMap="BaseResultMap">
     select
@@ -73,12 +90,12 @@
       htmlContent, article_summary, category_id,
       user_id, publishDate, editTime,
       article_status, article_pageviews, article_likes,
-      article_comments)
+      article_comments,article_favorites)
     values (#{articleId,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, #{mdcontent,jdbcType=VARCHAR},
       #{htmlcontent,jdbcType=VARCHAR}, #{articleSummary,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER},
       #{userId,jdbcType=INTEGER}, #{publishdate,jdbcType=TIMESTAMP}, #{edittime,jdbcType=TIMESTAMP},
       #{articleStatus,jdbcType=INTEGER}, #{articlePageviews,jdbcType=INTEGER}, #{articleLikes,jdbcType=INTEGER},
-      #{articleComments,jdbcType=INTEGER})
+      #{articleComments,jdbcType=INTEGER},#{articleFavorites,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="articleId" parameterType="com.sf.blogserver.vo.ArticleVo">
     insert into article
@@ -122,6 +139,9 @@
       <if test="articleComments != null">
         article_comments,
       </if>
+      <if test="articleFavorites != null">
+        article_favorites,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="articleId != null">
@@ -163,9 +183,12 @@
       <if test="articleComments != null">
         #{articleComments,jdbcType=INTEGER},
       </if>
+      <if test="articleFavorites != null">
+        #{articleFavorites,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.bean.Article">
+  <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.vo.ArticleVo">
     update article
     <set>
       <if test="articleTitle != null">
@@ -204,6 +227,9 @@
       <if test="articleComments != null">
         article_comments = #{articleComments,jdbcType=INTEGER},
       </if>
+      <if test="articleFavorites != null">
+        article_Favorites = #{articleFavorites,jdbcType=INTEGER},
+      </if>
     </set>
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
@@ -220,7 +246,8 @@
       article_status = #{articleStatus,jdbcType=INTEGER},
       article_pageviews = #{articlePageviews,jdbcType=INTEGER},
       article_likes = #{articleLikes,jdbcType=INTEGER},
-      article_comments = #{articleComments,jdbcType=INTEGER}
+      article_comments = #{articleComments,jdbcType=INTEGER},
+      article_favorites = #{articleFavorites,jdbcType=INTEGER}
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
   <update id="updateToDelete" parameterType="java.lang.Integer">
@@ -241,6 +268,16 @@
   <update id="increasePageview" parameterType="java.lang.Integer">
     update article
     set article_pageviews = article_pageviews +'1'
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="increaseFavorite" parameterType="java.lang.Integer">
+    update article
+    set article_favorites = article_favorites +'1'
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="decreaseFavorite" parameterType="java.lang.Integer">
+    update article
+    set article_favorites = article_favorites -'1'
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
 </mapper>

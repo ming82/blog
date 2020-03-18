@@ -11,10 +11,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author 92802
- * @date 2019/11/5
- */
 @Data
 public class UserDetail implements UserDetails {
     private Integer userId;
@@ -32,6 +28,8 @@ public class UserDetail implements UserDetails {
     private String userPicture;
 
     private Date userRegistetime;
+
+    private String userSignature;
 
     private List<Role> roles;
     @Override

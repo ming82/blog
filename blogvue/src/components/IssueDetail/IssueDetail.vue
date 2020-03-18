@@ -5,32 +5,44 @@
         <h2>{{issue.issueTitle}}</h2>
       </el-col>
       <el-col :span="24" align="left" class="marginleft time">
-        <span>{{issue.publishdate}}</span>
+        <img @click="toUser" :src="issue.userPicture" style="cursor:pointer;width: 40px;height: 40px;border-radius: 50px"/>
+        <span @click="toUser" style="cursor: pointer">{{issue.userNickname}}</span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a class="href" href="">{{issue.userNickname}}</a>
+        <span>{{issue.publishdate}}</span>
       </el-col>
       <el-col>
-        <div style="margin-right: 10px;margin-left: 10px;">
-          <el-divider></el-divider>
-        </div>
+<!--        <div style="margin-right: 10px;margin-left: 10px;">-->
+<!--          <el-divider></el-divider>-->
+<!--        </div>-->
+        <br>
+        <br>
       </el-col>
       <el-col :span="24" align="left" class="marginleft">
         <div v-html="issue.htmlcontent"></div>
       </el-col>
-      <el-col>
-        <br/>
-        <br/>
-        <el-divider content-position="left"><span style="font-size: 25px"> {{issue.issueAnswers}}个回答</span></el-divider>
+      <el-col align="left">
+        <el-divider></el-divider>
+        <span style="font-size: 20px;margin-left: 20px" v-if="issue.issueAnswers == 0"> 暂无回答</span>
+        <span style="font-size: 20px;margin-left: 20px" v-else> {{issue.issueAnswers}}个回答</span>
+        <el-divider></el-divider>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+
   export default {
     name: "IssueDeatil",
     props: {
       issue: Object
+    },
+    methods:{
+      toUser(){
+        this.$router.push({
+          path: `/userpage/${this.issue.userId}`,
+        })
+      },
     }
   }
 </script>

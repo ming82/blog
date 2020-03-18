@@ -1,40 +1,35 @@
 package com.sf.blogserver.controller;
 
 import com.sf.blogserver.bean.Issue;
+import com.sf.blogserver.query.ArticleQuery;
+import com.sf.blogserver.query.IssueQuery;
 import com.sf.blogserver.service.IssueService;
 import com.sf.blogserver.util.ResponseUtil;
+import com.sf.blogserver.vo.ArticleVo;
+import com.sf.blogserver.vo.IssueVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @Discription
- * @author Hh
- * @package com.sf.blogserver.controller
- * @create 2019/10/27 16:30
- * @Version: 1.0
- */
 @RestController
 @RequestMapping("/issue")
 public class IssueController {
     @Autowired
     IssueService issueService;
 
-    @GetMapping("/getAll")
-    public ResponseUtil getAllIssue(){
-        return ResponseUtil.success("查询成功",issueService.selectAllIssue());
+    @GetMapping("/getList")
+    public ResponseUtil getIssuesList(IssueQuery query){
+        return ResponseUtil.success("查询成功",issueService.getIssues(query));
     }
+
     @GetMapping("/getByUserId")
     public ResponseUtil getIssuesByUserId(Integer userId){
         return ResponseUtil.success("查询成功",issueService.getIssuesByUserId(userId));
-    }
-    @GetMapping("/getByCategoryId")
-    public ResponseUtil getIssuesByCategoryId(Integer categoryId){
-        return ResponseUtil.success("查询成功",issueService.getIssuesByCategoryId(categoryId));
     }
     @GetMapping("/getNoAnswers")
     public ResponseUtil getNoAnswers(){
         return ResponseUtil.success("查询成功",issueService.getNoAnswer());
     }
+
     @GetMapping("/getHotIssues")
     public ResponseUtil getHotIssues(){
         return ResponseUtil.success("查询成功",issueService.getHotIssues());
@@ -52,6 +47,16 @@ public class IssueController {
             return ResponseUtil.success("提问发表成功",null);
         } else {
             return ResponseUtil.fail("提问发表失败");
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseUtil editIssue(@RequestBody IssueVo issue){
+        int result = issueService.updateIssue(issue);
+        if (result == 1) {
+            return ResponseUtil.success("提问更新成功");
+        } else {
+            return ResponseUtil.fail("提问更新失败");
         }
     }
 

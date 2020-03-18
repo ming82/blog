@@ -9,7 +9,6 @@
 export default {
   name: 'App',
   mounted () {
-    // this.$store.dispatch('getAddress')
     this.getCategory()
     this.getAllTags()
   },

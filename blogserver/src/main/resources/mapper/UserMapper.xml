@@ -9,11 +9,12 @@
     <result column="user_status" jdbcType="INTEGER" property="userStatus" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="user_picture" jdbcType="VARCHAR" property="userPicture" />
+    <result column="user_signature" jdbcType="VARCHAR" property="userSignature" />
     <result column="user_registeTime" jdbcType="TIMESTAMP" property="userRegistetime" />
   </resultMap>
   <sql id="Base_Column_List">
     user_id, user_name, user_nickname, user_password, user_status, user_email, user_picture,
-    user_registeTime
+    user_registeTime,user_signature
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -26,6 +27,12 @@
     <include refid="Base_Column_List" />
     from user
     where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByUserNickname" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where user_nickname = #{userNickname,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from user
@@ -66,6 +73,9 @@
       <if test="userRegistetime != null">
         user_registeTime,
       </if>
+      <if test="userSignature != null">
+        user_signature,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -91,6 +101,9 @@
       </if>
       <if test="userRegistetime != null">
         #{userRegistetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userSignature != null">
+        #{userSignature,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -118,6 +131,9 @@
       <if test="userRegistetime != null">
         user_registeTime = #{userRegistetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="userSignature != null">
+        user_signature = #{userSignature,jdbcType=VARCHAR},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
@@ -132,4 +148,20 @@
       user_registeTime = #{userRegistetime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+  <select id="selectByQuery" parameterType="com.sf.blogserver.query.UserQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    <where>
+      <if test="userName != null and userName != ''">
+        user_name = #{userName}
+      </if>
+      <if test="userNickname != null and userNickname != ''">
+         user_nickname = #{userNickname}
+      </if>
+      <if test="userStatus != null and userStatus != ''">
+         user_status = #{userStatus}
+      </if>
+    </where>
+  </select>
 </mapper>

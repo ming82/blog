@@ -19,6 +19,8 @@ public class User {
 
     private Date userRegistetime;
 
+    private String userSignature;
+
     public Integer getUserId() {
         return userId;
     }
@@ -81,5 +83,13 @@ public class User {
 
     public void setUserRegistetime(Date userRegistetime) {
         this.userRegistetime = userRegistetime;
+    }
+
+    public String getUserSignature() {
+        return userSignature;
+    }
+
+    public void setUserSignature(String userSignature) {
+        this.userSignature = userSignature;
     }
 }

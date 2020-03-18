@@ -17,7 +17,7 @@
 
 <script>
   import {mapState} from 'vuex'
-  import {postIssue} from "../../api";
+  import {postIssue} from "../../api/issue";
 
   export default {
     name: "PostIssue",
