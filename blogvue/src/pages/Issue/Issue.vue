@@ -60,6 +60,10 @@
     inject:["reload"],
     methods:{
       postAns(){
+        if(this.mdContent === ''){
+          this.$message.warning("回答不可为空")
+          return
+        }
         this.htmlContent = this.$refs.md.d_render
         postAnswer(this.user.userId,this.issue.issueId,this.mdContent, this.htmlContent).then(result => {
           if (result.status === "success") {

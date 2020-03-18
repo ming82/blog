@@ -41,7 +41,7 @@
 
 <script>
   import Comments from "../Comments/Comments";
-  import {postComment,reqAnswerComments} from "../../api/comment";
+  import {postComment, reqAnswerComments} from "../../api/comment";
   import {mapState} from "vuex";
 
   export default {
@@ -57,7 +57,7 @@
       answer: Object,
       count: ''
     },
-    inject:["reload"],
+    inject: ["reload"],
     methods: {
       toUser() {
         this.$router.push({
@@ -75,8 +75,10 @@
         this.$prompt('评论', {
           confirmButtonText: '发表',
           cancelButtonText: '取消',
+          inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+          inputErrorMessage: '不可为空'
         }).then(({value}) => {
-          postComment(value, null, answerId, null,this.user.userId,'').then(result => {
+          postComment(value, null, answerId, null, this.user.userId, '').then(result => {
             if (result.status === "success") {
               this.$message.success(result.resMsg)
               this.reload()
@@ -94,7 +96,7 @@
         }
       })
     },
-    computed:{
+    computed: {
       ...mapState(['user'])
     }
   }

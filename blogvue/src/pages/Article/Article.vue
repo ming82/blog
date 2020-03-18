@@ -63,15 +63,20 @@
     inject:["reload"],
     methods:{
       postComment(){
-        postComment(this.comment,this.article.articleId,null,null,this.user.userId,null).then(result=>{
-          if(result.status === "success"){
-            this.$message.success(result.resMsg)
-            this.comment = ''
-            this.reload()
-          }else {
-            this.$message.error(result.resMsg)
-          }
-        })
+        if(this.comment === ''){
+          this.$message.warning("评论内容不可为空")
+          return
+        }else {
+          postComment(this.comment,this.article.articleId,null,null,this.user.userId,null).then(result=>{
+            if(result.status === "success"){
+              this.$message.success(result.resMsg)
+              this.comment = ''
+              this.reload()
+            }else {
+              this.$message.error(result.resMsg)
+            }
+          })
+        }
       }
     },
     mounted() {
