@@ -36,20 +36,31 @@
         userId: '',
       }
     },
-    inject:["reload"],
+    inject: ["reload"],
     methods: {
       saveIssue(status, id) {
-        this.articleStatus = status
-        this.htmlContent = this.$refs.md.d_render
-        this.userId = id
-        postIssue(this.userId, this.issueTitle, this.mdContent, this.htmlContent, this.categoryId,).then(result => {
-          if (result.status === "success") {
-            this.$message.success(result.resMsg)
-            this.reload()
-          } else {
-            this.$message.error(result.resMsg)
-          }
-        })
+        if (this.issueTitle === '') {
+          this.$message.warning("请输入提问标题")
+          return
+        } else if (this.categoryId === '') {
+          this.$message.warning("请选择提问分类")
+          return
+        } else if (this.mdContent === '') {
+          this.$message.warning("提问内容不可为空")
+          return
+        } else {
+          this.articleStatus = status
+          this.htmlContent = this.$refs.md.d_render
+          this.userId = id
+          postIssue(this.userId, this.issueTitle, this.mdContent, this.htmlContent, this.categoryId,).then(result => {
+            if (result.status === "success") {
+              this.$message.success(result.resMsg)
+              this.reload()
+            } else {
+              this.$message.error(result.resMsg)
+            }
+          })
+        }
       }
     },
   }
