@@ -65,6 +65,7 @@
           pageNum: 1,
           categoryId: '',
           userId: '',
+          userNickname:'',
           keyword:''
         },
         issues: []
@@ -77,8 +78,8 @@
     },
     methods:{
       getList(){
-        reqIssueList(this.issueQuery.pageNum, this.issueQuery.pageSize
-          , this.issueQuery.categoryId, this.issueQuery.userId,this.issueQuery.keyword).then(result =>{
+        reqIssueList(this.issueQuery.pageNum, this.issueQuery.pageSize, this.issueQuery.categoryId,
+          this.issueQuery.userId,this.issueQuery.userNickname,this.issueQuery.keyword).then(result =>{
           this.issues = result.data.list
           this.total = result.data.total
         })

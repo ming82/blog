@@ -12,12 +12,12 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @GetMapping("/getByArticleId")
+    @GetMapping("/common/getByArticleId")
     public ResponseUtil getCommentByArticleId(Integer articleId){
         return ResponseUtil.success("查询成功",commentService.getCommentByArticleId(articleId));
     }
 
-    @GetMapping("/getByAnswerId")
+    @GetMapping("/common/getByAnswerId")
     public ResponseUtil getCommentByAnswerId(Integer answerId){
         return ResponseUtil.success("查询成功",commentService.getCommentByAnswerId(answerId));
     }

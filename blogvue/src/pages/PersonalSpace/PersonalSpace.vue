@@ -80,9 +80,10 @@
                   <el-input type="textarea" v-model="userInfo.userSignature" v-if="isEdit"></el-input>
                   <span v-else>{{user.userSignature}}</span>
                 </el-form-item>
-                <el-button v-if="!isEdit" @click="toEdit()"type="success" plain>修改信息</el-button>
-                <el-button v-if="isEdit" @click="cancel()"type="info" plain>取消</el-button>
-                <el-button v-if="isEdit" @click="toUpdate()"type="primary" plain>提交</el-button>
+                <el-button v-if="!isEdit" @click="toEdit()" type="success" plain>修改信息</el-button>
+                <el-button v-if="!isEdit" @click="editPasswordClick()" type="danger" plain>修改密码</el-button>
+                <el-button v-if="isEdit" @click="cancel()" type="info" plain>取消</el-button>
+                <el-button v-if="isEdit" @click="toUpdate()" type="primary" plain>提交</el-button>
               </el-form>
             </el-tab-pane>
           </el-tabs>
@@ -134,7 +135,8 @@
         <div v-if="tag==='5'">
           <el-tabs type="border-card">
             <el-tab-pane label="我的提问">
-              <IssueSummary :edit-flag="true" :issue="issue" v-for="(issue,index) in issues" :key="index"></IssueSummary>
+              <IssueSummary :edit-flag="true" :issue="issue" v-for="(issue,index) in issues"
+                            :key="index"></IssueSummary>
               <br>
               <el-pagination
                 v-if="this.issueTotal != 0"
@@ -172,6 +174,24 @@
     <el-footer>
       <Footer></Footer>
     </el-footer>
+    <el-dialog title="修改密码" :visible.sync="passwordEditVisible" width="40%"
+               :close-on-click-modal="false">
+      <el-form :model="password" :rules="rules" ref="form">
+        <el-form-item label="旧密码" label-width="100px" prop="oldPassword">
+          <el-input v-model="password.oldPassword" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" label-width="100px" prop="newPassword">
+          <el-input v-model="password.newPassword" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" label-width="100px" prop="rePassword">
+          <el-input v-model="password.rePassword" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelEditPassword()">取 消</el-button>
+        <el-button type="primary" @click="editPassword()">提交</el-button>
+      </div>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -190,17 +210,45 @@
   import {reqFavoriteArticle} from "../../api/favorite"
   import {formatTimeToStr} from "../../utils/date";
   import {reqArticleList} from "../../api/article";
-  import {nickNameCheck, updateUser} from "../../api/user";
+  import {checkUserPassword, nickNameCheck, updateUser, updateUserPassword} from "../../api/user";
   import {reqIssueList} from "../../api/issue";
   import {mapState} from 'vuex'
 
   export default {
     data() {
       return {
-        imageUrl:'',
+        passwordEditVisible: false,
+        password: {
+          oldPassword: '',
+          newPassword: '',
+          rePassword: ''
+        },
+        rules: {
+          oldPassword: [
+            {
+              required: true,
+              message: '请输入旧密码',
+              trigger: 'blur'
+            }
+          ],
+          newPassword: [
+            {
+              required: true,
+              message: '请输入新密码',
+              trigger: 'blur'
+            }
+          ],
+          rePassword: [
+            {
+              required: true,
+              message: '请输入旧密码',
+              trigger: 'blur'
+            }
+          ]
+        },
+        imageUrl: '',
         isLogin: true,
         tag: '1',
-        factiveIndex: '1',
         articles: [],
         issues: [],
         drafts: [],
@@ -210,25 +258,25 @@
         isEdit: false,
         articleTotal: 0,
         issueTotal: 0,
-        userInfo:{
+        userInfo: {
           userNickname: '',
-          userSignature:'',
-          userEmail:'',
-          userPicture:'',
+          userSignature: '',
+          userEmail: '',
+          userPicture: '',
         },
         articleQuery: {
           pageSize: 5,
           pageNum: 1,
           categoryId: '',
-          keyword:'',
-          userNickname:''
+          keyword: '',
+          userNickname: ''
         },
         issueQuery: {
           pageSize: 5,
           pageNum: 1,
           categoryId: '',
-          keyword:'',
-          userNickname:''
+          keyword: '',
+          userNickname: ''
         }
       }
     },
@@ -252,18 +300,18 @@
     },
     inject: ["reload"],
     methods: {
-      toEdit(){
+      toEdit() {
         this.userInfo.userNickname = this.user.userNickname
         this.userInfo.userEmail = this.user.userEmail
-        this.userInfo.userSignature= this.user.userSignature
+        this.userInfo.userSignature = this.user.userSignature
         this.isEdit = true
       },
-      cancel(){
+      cancel() {
         this.isEdit = false
       },
-      update(){
-        updateUser(this.user.userId,this.userInfo.userNickname,this.userInfo.userSignature,this.userInfo.userEmail,null).then(result=>{
-          if(result.status === "success"){
+      update() {
+        updateUser(this.user.userId, this.userInfo.userNickname, this.userInfo.userSignature, this.userInfo.userEmail, null).then(result => {
+          if (result.status === "success") {
             this.$message.success(result.resMsg)
             this.user.userNickname = this.userInfo.userNickname
             this.user.userEmail = this.userInfo.userEmail
@@ -274,28 +322,61 @@
           }
         })
       },
-      toUpdate(){
-        if(this.userInfo.userNickname === ''){
+      editPasswordClick() {
+        this.passwordEditVisible = true
+      },
+      editPassword() {
+        this.$refs['form'].validate(valid => {
+          if (valid) {
+            if(this.password.newPassword !== this.password.rePassword){
+              this.$message.error("确认密码不一致，请重新输入")
+            }else {
+              checkUserPassword(this.user.userId,this.password.oldPassword).then(result=>{
+                if(result.status === 'success'){
+                  updateUserPassword(this.user.userId,this.password.rePassword).then(res =>{
+                    if(res.status === 'success'){
+                      this.$message.success(res.resMsg)
+                      this.passwordEditVisible = false
+                      this.$store.dispatch('toLogout')
+                      this.$router.push('/msite')
+                    }else {
+                      this.$message.error(res.resMsg)
+                    }
+                  })
+                }else {
+                  this.$message.error(result.resMsg)
+                }
+              })
+            }
+          }
+        })
+      },
+      cancelEditPassword() {
+        this.passwordEditVisible = false
+        this.$refs['form'].resetFields()
+      },
+      toUpdate() {
+        if (this.userInfo.userNickname === '') {
           this.$message.warning("请输入用户昵称")
           return
         }
-        if(this.userInfo.userEmail === ''){
+        if (this.userInfo.userEmail === '') {
           this.$message.warning("请输入用户邮箱")
           return
         }
-        if(this.userInfo.userNickname == this.user.userNickname){
+        if (this.userInfo.userNickname == this.user.userNickname) {
           this.update()
-        }else {
-          nickNameCheck(this.userInfo.userNickname).then(result=>{
-            if(result.status === "success"){
+        } else {
+          nickNameCheck(this.userInfo.userNickname).then(result => {
+            if (result.status === "success") {
               this.update()
-            }else {
+            } else {
               this.$message.error(result.resMsg)
             }
           })
         }
       },
-      uploadImg (f) {
+      uploadImg(f) {
         console.log(f)
         let formdata = new FormData()
         formdata.append('file', f.file)
@@ -305,8 +386,8 @@
           data: formdata,
           headers: {'Content-Type': 'multipart/form-data'},
         }).then(res => {
-          updateUser(this.user.userId,null,null,null,res.data.data).then(result=>{
-            if(result.status === "success"){
+          updateUser(this.user.userId, null, null, null, res.data.data).then(result => {
+            if (result.status === "success") {
               this.$message.success(result.resMsg)
               this.user.userPicture = res.data.data
               this.reload()
@@ -318,7 +399,7 @@
           console.log(error)
         })
       },
-      beforeAvatarUpload (file) {
+      beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg'
         const isLt2M = (file.size / 1024 / 1024) < 2
 
@@ -344,7 +425,7 @@
       },
       getArticleList() {
         reqArticleList(this.articleQuery.pageNum, this.articleQuery.pageSize
-          , this.articleQuery.categoryId, this.user.userId,this.articleQuery.userNickname,this.articleQuery.keyword).then(result => {
+          , this.articleQuery.categoryId, this.user.userId, this.articleQuery.userNickname, this.articleQuery.keyword).then(result => {
           this.articles = result.data.list
           this.articleTotal = result.data.total
         })
@@ -359,7 +440,7 @@
       },
       getIssueList() {
         reqIssueList(this.issueQuery.pageNum, this.issueQuery.pageSize
-          , this.issueQuery.categoryId, this.user.userId,this.issueQuery.userNickname,this.issueQuery.keyword).then(result => {
+          , this.issueQuery.categoryId, this.user.userId, this.issueQuery.userNickname, this.issueQuery.keyword).then(result => {
           this.issues = result.data.list
           this.issueTotal = result.data.total
         })
@@ -374,13 +455,13 @@
       },
     },
     computed: {
-      ...mapState(['user', 'noRead','IMAGE_URL']),
+      ...mapState(['user', 'noRead', 'IMAGE_URL']),
       no() {
         return this.$store.state.noRead
       }
     },
     mounted() {
-      this.imageUrl = this.IMAGE_URL+this.user.userPicture
+      this.imageUrl = this.IMAGE_URL + this.user.userPicture
       this.getArticleList()
       this.getIssueList()
       reqIssueByUserId(this.user.userId).then(result => {

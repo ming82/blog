@@ -7,6 +7,10 @@ import com.sf.blogserver.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 文章控制层
+ * @author SM
+ */
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
@@ -14,46 +18,70 @@ public class ArticleController {
     @Autowired
     ArticleService articleService;
 
-    @GetMapping("/getList")
+    /**
+     * 分页查询文章列表
+     * @param query 查询实体
+     * @return
+     */
+    @GetMapping("/common/getList")
     public ResponseUtil getArticlesList(ArticleQuery query){
-        return ResponseUtil.success("查询成功",articleService.getArticles(query));
+        return ResponseUtil.success("查询完成",articleService.getArticles(query));
     }
 
-    @GetMapping("/getHots")
+    /**
+     * 获取热门文章
+     * @return
+     */
+    @GetMapping("/common/getHots")
     public ResponseUtil getHotArticles(){
-        return ResponseUtil.success("查询成功",articleService.getHotArticles());
+        return ResponseUtil.success("查询完成",articleService.getHotArticles());
     }
 
-    @GetMapping("/getNews")
+    /**
+     * 获取最新文章
+     * @return
+     */
+    @GetMapping("/common/getNews")
     public ResponseUtil getNewArticles(){
-        return ResponseUtil.success("查询成功",articleService.getNewArticles());
+        return ResponseUtil.success("查询完成",articleService.getNewArticles());
     }
 
-    @GetMapping("/getByCategoryId")
-    public ResponseUtil getArticlesByCategoryId(Integer categoryId){
-        return ResponseUtil.success("查询成功",articleService.getArticlesByCategoryId(categoryId));
-    }
-
+    /**
+     * 点赞
+     * @param articleId 文章ID
+     * @param userId 用户ID
+     * @return
+     */
     @GetMapping("/like")
     public ResponseUtil likeArticle(Integer articleId, Integer userId){
         return ResponseUtil.success("已点赞",articleService.likeArticle(articleId,userId));
     }
 
-    @GetMapping("/getByUserId")
-    public ResponseUtil getArticlesByUserId(Integer userId){
-        return ResponseUtil.success("查询成功",articleService.getArticlesByUserId(userId));
-    }
-
+    /**
+     * 获取用户草稿
+     * @param userId 用户ID
+     * @return
+     */
     @GetMapping("/getDrafts")
     public ResponseUtil getDrafts(Integer userId){
-        return ResponseUtil.success("查询成功",articleService.getDraft(userId));
+        return ResponseUtil.success("查询完成",articleService.getDraft(userId));
     }
 
-    @GetMapping("/{articleId}")
+    /**
+     * 根据ID获取文章
+     * @param articleId 文章ID
+     * @return
+     */
+    @GetMapping("/common/{articleId}")
     public ResponseUtil getArticleById(@PathVariable Integer articleId){
-        return ResponseUtil.success("查询成功", articleService.getArticleById(articleId));
+        return ResponseUtil.success("查询完成", articleService.getArticleById(articleId));
     }
 
+    /**
+     * 发表文章
+     * @param article 文章实体
+     * @return
+     */
     @PostMapping("/")
     public ResponseUtil addNewArticle(@RequestBody ArticleVo article){
         int result = articleService.addNewArticle(article);
@@ -64,6 +92,11 @@ public class ArticleController {
         }
     }
 
+    /**
+     * 修改文章
+     * @param article 文章实体
+     * @return
+     */
     @PutMapping("/")
     public ResponseUtil editArticle(@RequestBody ArticleVo article){
         int result = articleService.updateArticle(article);
@@ -74,6 +107,11 @@ public class ArticleController {
         }
     }
 
+    /**
+     * 删除文章
+     * @param articleId 文章ID
+     * @return
+     */
     @DeleteMapping("/{articleId}")
     public ResponseUtil deleteArticle(@PathVariable Integer articleId){
         int result = articleService.deleteArticle(articleId);

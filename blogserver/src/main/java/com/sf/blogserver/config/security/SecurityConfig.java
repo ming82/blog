@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import java.io.PrintWriter;
@@ -21,13 +22,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     UserDetailService userDetailService;
-
     @Autowired
     AuthenticationAccessDeniedHandler authenticationAccessDeniedHandler;
 
+    //    @Bean
+//    public static NoOpPasswordEncoder passwordEncoder() {
+//        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+//    }
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -44,13 +48,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 //超级管理员可授权
-                .antMatchers("/admin/grantPermit").hasRole("ADMIN")
+                .antMatchers("/user/superadmin/**").hasRole("SUPERADMIN")
                 //普通管理员权限
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                //评论、发表、点赞、个人空间需登录后可用
-                .antMatchers("/comment/post","/article/postArticle","/article/like","/answer/postAnswer","/user/selfSpace").authenticated()
-                //其他请求都直接允许
-                .anyRequest().permitAll()
+                .antMatchers("/category/admin/**", "/tag/admin/**").hasRole("ADMIN")
+                .antMatchers("/answer/common/**", "/article/common/**", "/category/common/**", "/comment/common/**",
+                        "/issue/common/**", "/tag/common/**", "/user/common/**", "/favorite/common/**", "/image/**").permitAll()
+                .anyRequest().authenticated()
                 .and().logout().permitAll()
                 .and().formLogin().loginPage("/tologin").loginProcessingUrl("/login")
                 .usernameParameter("username").passwordParameter("password").permitAll()

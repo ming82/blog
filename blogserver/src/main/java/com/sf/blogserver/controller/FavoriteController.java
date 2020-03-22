@@ -44,7 +44,7 @@ public class FavoriteController {
         }
     }
 
-    @GetMapping("/getFavorite")
+    @GetMapping("/common/getFavorite")
     public ResponseUtil getFavorite(Integer userId){
         return ResponseUtil.success("查询成功",favoriteService.favoriteArticle(userId));
     }

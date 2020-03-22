@@ -14,7 +14,7 @@ public class AnswerController {
     @Autowired
     AnswerService answerService;
 
-    @GetMapping("/getAnswersByIssueId")
+    @GetMapping("/common/getAnswersByIssueId")
     public ResponseUtil getAnswersByIssueId(Integer issueId) {
         return ResponseUtil.success("查询成功", answerService.getAnswersByIssueId(issueId));
     }

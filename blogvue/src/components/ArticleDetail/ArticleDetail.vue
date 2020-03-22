@@ -1,7 +1,7 @@
 <template>
   <div class="shadow">
     <el-row style="min-height:800px;*+height:100%;_height:400px;">
-      <el-col :span="24"  class="marginleft">
+      <el-col :span="24" class="marginleft">
         <h2 align="left">
           <span>{{article.articleTitle}}</span>
           <el-tag v-for="(tag,index) in article.tags" :key="index">{{tag}}</el-tag>
@@ -14,7 +14,8 @@
       </el-col>
       <el-col :span="24" align="left" class="marginleft time">
 
-        <img @click="toUser" :src="article.userPicture" style="width: 40px;height: 40px;border-radius: 50px;cursor: pointer"/>
+        <img @click="toUser" :src="article.userPicture"
+             style="width: 40px;height: 40px;border-radius: 50px;cursor: pointer"/>
         <span @click="toUser" style="cursor: pointer">{{article.userNickname}}</span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <span>{{article.publishdate}}</span>
@@ -50,7 +51,7 @@
 <script>
   import {like} from "../../api/article";
   import {mapState} from "vuex";
-  import {favorite,checkFavorited,cancelFavorite} from "../../api/favorite";
+  import {favorite, checkFavorited, cancelFavorite} from "../../api/favorite";
 
   export default {
     data() {
@@ -59,69 +60,72 @@
       }
     },
     name: "ArticleDetail",
-    props:{
+    props: {
       article: Object,
     },
     mounted() {
-      checkFavorited(this.article.articleId,this.user.userId).then(result =>{
-        if(result.status === "success"){
+      checkFavorited(this.article.articleId, this.user.userId).then(result => {
+        if (result.status === "success") {
           this.isFavorited = true
         }
       })
     },
-    methods:{
-      toUser(){
+    methods: {
+      toUser() {
         this.$router.push({
           path: `/userpage/${this.article.userId}`,
         })
       },
       favoriteClick() {
-        if(this.isFavorited == true){
-          this.$confirm('是否取消收藏？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            cancelFavorite(this.article.articleId, this.user.userId).then(result => {
+        if (this.user.userId) {
+          if (this.isFavorited == true) {
+            this.$confirm('是否取消收藏？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              cancelFavorite(this.article.articleId, this.user.userId).then(result => {
+                if (result.status === "success") {
+                  this.$message.success(result.resMsg)
+                  this.isFavorited = false
+                } else
+                  this.$message.error(result.resMsg)
+              })
+            });
+          } else {
+            if (this.article.userId == this.user.userId) {
+              this.$message.warning("抱歉，无法收藏自己文章")
+              return
+            }
+            favorite(this.article.articleId, this.user.userId).then(result => {
               if (result.status === "success") {
                 this.$message.success(result.resMsg)
-                this.isFavorited = false
+                this.isFavorited = true
               } else
                 this.$message.error(result.resMsg)
             })
-          });
-        }else {
-          if (this.article.userId == this.user.userId) {
-            this.$message.warning("抱歉，无法收藏自己文章")
-            return
           }
-          favorite(this.article.articleId, this.user.userId).then(result => {
-            if (result.status === "success") {
-              this.$message.success(result.resMsg)
-              this.isFavorited = true
-            } else
-              this.$message.error(result.resMsg)
-          })
+        }else {
+          this.$message.warning("登录后可收藏")
         }
       },
-      likeClick(){
-        if (this.article.userId == this.user.userId){
+      likeClick() {
+        if (this.article.userId == this.user.userId) {
           this.$message.warning("抱歉，无法给自己文章点赞")
           return
         }
-        like(this.article.articleId,this.user.userId).then(result=>{
-          if(result.status === "success"){
+        like(this.article.articleId, this.user.userId).then(result => {
+          if (result.status === "success") {
             this.$message.success(result.resMsg)
-          }
-          else
+          } else
             this.$message.error(result.resMsg)
         })
       },
-      noLogin(){
+      noLogin() {
         this.$message.warning("登录后可点赞")
       }
     },
-    computed:{
+    computed: {
       ...mapState(['user'])
     }
   }

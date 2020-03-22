@@ -11,6 +11,7 @@ import com.sf.blogserver.vo.UserVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +39,15 @@ public class UserServiceImpl implements UserService {
     AnswerMapper answerMapper;
     @Value("${image_url}")
     String IMAGE_URL;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetail getUserByUsername(String userName) {
         User user = userMapper.selectByUsername(userName);
+        if(user == null){
+            return null;
+        }
         UserDetail userDetail = new UserDetail();
         BeanUtils.copyProperties(user,userDetail);
         //注入用户角色
@@ -64,6 +70,7 @@ public class UserServiceImpl implements UserService {
     public int register(User user) {
         user.setUserRegistetime(new Date());
         user.setUserPicture("default.jpg");
+        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
         int ret1 = userMapper.insertSelective(user);
         UserRole userRole = new UserRole();
         userRole.setUserId(user.getUserId());
@@ -148,6 +155,17 @@ public class UserServiceImpl implements UserService {
                 return 1;
             }
         }
+    }
+
+    @Override
+    public boolean checkPassword(User user) {
+        return passwordEncoder.matches(user.getUserPassword(),userMapper.selectByPrimaryKey(user.getUserId()).getUserPassword());
+    }
+
+    @Override
+    public int editPassword(User user) {
+        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override

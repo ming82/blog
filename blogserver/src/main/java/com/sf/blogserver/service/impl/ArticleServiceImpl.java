@@ -20,24 +20,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 文章服务层
+ * @author SM
+ */
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     ArticleMapper articleMapper;
-
     @Autowired
     UserMapper userMapper;
-
     @Autowired
     ArticleTagMapper articleTagMapper;
-
     @Autowired
     TagMapper tagMapper;
-
     @Autowired
     MessageMapper messageMapper;
-
     @Deprecated
     CategoryMapper categoryMapper;
     @Value("${image_url}")
@@ -65,15 +64,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleVo> getArticlesByCategoryId(Integer categoryId) {
-        List<ArticleVo> articleVos = new ArrayList<>();
-        for (Article article : articleMapper.selectByCategoryId(categoryId)) {
-            articleVos.add(articleToVo(article));
-        }
-        return articleVos;
-    }
-
-    @Override
     public List<ArticleVo> getHotArticles() {
         List<ArticleVo> articleVos = new ArrayList<>();
         for (Article article : articleMapper.getHotArticles()) {
@@ -86,15 +76,6 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleVo> getNewArticles() {
         List<ArticleVo> articleVos = new ArrayList<>();
         for (Article article : articleMapper.getNewArticles()) {
-            articleVos.add(articleToVo(article));
-        }
-        return articleVos;
-    }
-
-    @Override
-    public List<ArticleVo> getArticlesByUserId(Integer userId) {
-        List<ArticleVo> articleVos = new ArrayList<>();
-        for (Article article : articleMapper.selectByUserId(userId)) {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
@@ -194,11 +175,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleVos.add(articleToVo(article));
         }
         return articleVos;
-    }
-
-    @Override
-    public List<ArticleVo> searchArticle(String keyword) {
-        return null;
     }
 
     public ArticleVo articleToVo(Article article) {

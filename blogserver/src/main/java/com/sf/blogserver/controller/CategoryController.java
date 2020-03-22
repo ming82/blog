@@ -13,12 +13,12 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/common/getAll")
     public ResponseUtil getAllCategory() {
         return ResponseUtil.success("查询成功", categoryService.getAllCategory());
     }
 
-    @PostMapping("/")
+    @PostMapping("/admin/")
     public ResponseUtil insertCategory(@RequestBody Category category) {
         Integer result = categoryService.insertCategory(category);
         if (result == 1) {
@@ -28,7 +28,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("/")
+    @PutMapping("/admin/")
     public ResponseUtil updateCategory(@RequestBody Category category) {
         int result = categoryService.update(category);
         if (result == 1) {
@@ -38,7 +38,7 @@ public class CategoryController {
         }
     }
 
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping("/admin/{categoryId}")
     public ResponseUtil deleteCategoryByPrimaryKey(@PathVariable Integer categoryId) {
         Integer result = categoryService.deleteCategoryByPrimaryKey(categoryId);
         if (result == 1) {

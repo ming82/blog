@@ -16,26 +16,26 @@ public class IssueController {
     @Autowired
     IssueService issueService;
 
-    @GetMapping("/getList")
+    @GetMapping("/common/getList")
     public ResponseUtil getIssuesList(IssueQuery query){
         return ResponseUtil.success("查询成功",issueService.getIssues(query));
     }
 
-    @GetMapping("/getByUserId")
+    @GetMapping("/common/getByUserId")
     public ResponseUtil getIssuesByUserId(Integer userId){
         return ResponseUtil.success("查询成功",issueService.getIssuesByUserId(userId));
     }
-    @GetMapping("/getNoAnswers")
+    @GetMapping("/common/getNoAnswers")
     public ResponseUtil getNoAnswers(){
         return ResponseUtil.success("查询成功",issueService.getNoAnswer());
     }
 
-    @GetMapping("/getHotIssues")
+    @GetMapping("/common/getHotIssues")
     public ResponseUtil getHotIssues(){
         return ResponseUtil.success("查询成功",issueService.getHotIssues());
     }
 
-    @GetMapping("/{issueId}")
+    @GetMapping("/common/{issueId}")
     public ResponseUtil getIssueById(@PathVariable Integer issueId){
         return ResponseUtil.success("查询成功",issueService.selectIssueById(issueId));
     }

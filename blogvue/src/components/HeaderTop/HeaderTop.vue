@@ -176,11 +176,15 @@
         }
       }
     },
+    inject: ["reload"],
     methods: {
       toSearch() {
         this.$router.push({
           path: `/search/${this.keyword}`,
         })
+        if(this.$route.path.indexOf("/search") >= 0){
+          this.reload()
+        }
       },
       toManage() {
         this.$router.push({

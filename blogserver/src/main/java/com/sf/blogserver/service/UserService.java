@@ -25,4 +25,8 @@ public interface UserService {
     PageInfo getList(UserQuery query);
 
     int updatePermit(UserQuery user);
+
+    boolean checkPassword(User user);
+
+    int editPassword(User user);
 }

@@ -12,24 +12,24 @@ public class TagController {
     @Autowired
     TagService tagService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/common/getAll")
     public ResponseUtil getAllTag() {
         return ResponseUtil.success("查询成功", tagService.getAllTag());
     }
 
-    @DeleteMapping("/{tagId}")
+    @DeleteMapping("/admin/{tagId}")
     public ResponseUtil delete(@PathVariable Integer tagId) {
         int result = tagService.deleteTag(tagId);
         if (result == 1) {
-            return ResponseUtil.success("文章删除成功");
+            return ResponseUtil.success("标签删除成功");
         } else if (result == -1) {
             return ResponseUtil.fail("已有文章关联此标签，无法删除");
         } else {
-            return ResponseUtil.fail("文章删除失败");
+            return ResponseUtil.fail("标签删除失败");
         }
     }
 
-    @PutMapping("/")
+    @PutMapping("/admin/")
     public ResponseUtil editTag(@RequestBody Tag tag) {
         if (tagService.update(tag) == 1) {
             return ResponseUtil.success("编辑成功");
@@ -38,7 +38,7 @@ public class TagController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("/admin/")
     public ResponseUtil addTag(@RequestBody Tag tag) {
         if (tagService.insertTag(tag) == 1) {
             return ResponseUtil.success("添加成功");

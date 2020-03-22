@@ -32,12 +32,12 @@ public class UserController {
         return ResponseUtil.fail("请先登录");
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user/common/{userId}")
     public ResponseUtil getUserById(@PathVariable Integer userId) {
         return ResponseUtil.success("查询成功", userService.getUserById(userId));
     }
 
-    @PostMapping("/user/")
+    @PostMapping("/user/common/")
     public ResponseUtil register(@RequestBody User user) {
         if (userService.register(user) == 2) {
             return ResponseUtil.success("注册成功，请登录");
@@ -46,7 +46,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/getList")
+    @GetMapping("/user/superadmin/getList")
     public ResponseUtil getList(UserQuery query){
         return ResponseUtil.success("查询成功",userService.getList(query));
     }
@@ -60,8 +60,26 @@ public class UserController {
         }
     }
 
+    @PutMapping("/user/checkPassword")
+    public ResponseUtil checkPassword(@RequestBody User user) {
+        if (userService.checkPassword(user)) {
+            return ResponseUtil.success("输入密码正确");
+        } else {
+            return ResponseUtil.fail("输入密码错误");
+        }
+    }
 
-    @PutMapping("/user/editPermit")
+
+    @PutMapping("/user/editPassword")
+    public ResponseUtil editPassword(@RequestBody User user) {
+        if (userService.editPassword(user) == 1) {
+            return ResponseUtil.success("修改密码成功，请重新登录");
+        } else {
+            return ResponseUtil.fail("修改密码失败");
+        }
+    }
+
+    @PutMapping("/user/superadmin/editPermit")
     public ResponseUtil updatePermit(@RequestBody UserQuery user) {
         if (userService.updatePermit(user) == 1) {
             return ResponseUtil.success("权限修改成功");
@@ -70,7 +88,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/nameCheck")
+    @GetMapping("/user/common/nameCheck")
     public ResponseUtil checkName(@RequestParam("userName") String userName,@RequestParam("userNickname") String userNickname){
         int res = userService.nameCheck(userName,userNickname);
         if(res == 1){
@@ -80,7 +98,7 @@ public class UserController {
         }else
             return ResponseUtil.success("无重复");
     }
-    @GetMapping("/user/nickNameCheck")
+    @GetMapping("/user/common/nickNameCheck")
     public ResponseUtil nickNameCheck(@RequestParam("userNickname") String userNickname){
         int res = userService.nickNameCheck(userNickname);
         if(res == 0){
@@ -89,7 +107,7 @@ public class UserController {
             return ResponseUtil.success("无重复");
     }
 
-    @GetMapping("/userInfo/{userId}")
+    @GetMapping("/user/common/userInfo/{userId}")
     public ResponseUtil getUserInfo(@PathVariable Integer userId) {
         return ResponseUtil.success("查询成功",userService.getUserInfo(userId));
     }
