@@ -1,10 +1,12 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.UserRole;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+@Mapper
 public interface UserRoleMapper {
     int deleteByUidRid(@Param("userId") Integer userId,@Param("roleId") Integer roleId);
 

@@ -104,6 +104,7 @@
 
 <script>
   import {mapState} from 'vuex'
+  import bcrypt from 'bcryptjs';
   import {nameCheck, register} from "../../api/user";
 
   export default {
@@ -203,6 +204,10 @@
           this.$message.warning("请输入密码")
           return
         }
+        // 密码传输加密
+        // let salt = bcrypt.genSaltSync(10);    //定义密码加密的计算强度,默认10
+        // let hash = bcrypt.hashSync(this.loginForm.password, salt);
+        // this.loginForm.password = hash
         this.$store.dispatch('getLoginUser', this.loginForm)
         this.loginFormVisible = false
       },
@@ -239,7 +244,7 @@
               }
               //注册
               if (passwordFlag && nameFlag) {
-                register(this.registerForm.userName, this.registerForm.userNickname, this.registerForm.userPassword, this.registerForm.userEmail).then(result => {
+                register(this.registerForm.userName, this.registerForm.userNickname, hash, this.registerForm.userEmail).then(result => {
                   if (result.status === "success") {
                     this.$message.success(result.resMsg)
                     this.registerFormVisible = false

@@ -2,9 +2,11 @@ package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Issue;
 import com.sf.blogserver.query.IssueQuery;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface IssueMapper {
     int deleteByPrimaryKey(Integer issueId);
 

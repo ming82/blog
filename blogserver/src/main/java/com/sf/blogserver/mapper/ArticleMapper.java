@@ -3,13 +3,16 @@ package com.sf.blogserver.mapper;
 import com.sf.blogserver.query.ArticleQuery;
 import com.sf.blogserver.bean.Article;
 import com.sf.blogserver.vo.ArticleVo;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+
 
 /**
  * 操作文章表接口
  * @author SM
  */
+@Mapper
 public interface ArticleMapper {
     /**
      * 新增文章

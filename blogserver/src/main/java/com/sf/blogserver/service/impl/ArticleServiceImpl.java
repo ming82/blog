@@ -42,8 +42,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Value("${image_url}")
     String IMAGE_URL;
 
+    /**
+     * 获取文章列表，可根据用户ID，用户昵称，栏目ID，关键词分页查询
+     * @param query 查询主体
+     * @return
+     */
     @Override
     public PageInfo getArticles(ArticleQuery query) {
+        // 在查询userId为空的情况下，根据查询的用户名或用户昵称查询用户，获取userId
         if(query.getUserId() == null&&query.getUserNickname() != null&&query.getUserNickname() != ""){
             User user = userMapper.selectByUserNickname(query.getUserNickname());
             if(user == null){
@@ -52,8 +58,11 @@ public class ArticleServiceImpl implements ArticleService {
                 query.setUserId(user.getUserId());
             }
         }
+        // 开启分页
         PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        // 查询文章列表
         List<Article> articles = articleMapper.selectByQuery(query);
+        // 转成vo类
         List<ArticleVo> articleVos = new ArrayList<>();
         PageInfo pageInfo = new PageInfo<>(articles);
         for (Article article : articles) {
@@ -130,6 +139,11 @@ public class ArticleServiceImpl implements ArticleService {
         return content;
     }
 
+    /**
+     * 编辑文章，根据文章ID，可编辑文章内容，所属栏目ID，或者增删文章标签
+     * @param article 文章实体
+     * @return
+     */
     @Override
     public int updateArticle(ArticleVo article) {
         //设置编辑日期
@@ -177,6 +191,11 @@ public class ArticleServiceImpl implements ArticleService {
         return articleVos;
     }
 
+    /**
+     * 将文章实体转化成返回到前端的vo类
+     * @param article
+     * @return
+     */
     public ArticleVo articleToVo(Article article) {
         ArticleVo articleVo = new ArticleVo();
         //注入已有属性

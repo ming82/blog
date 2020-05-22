@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 @RestController
@@ -119,14 +121,15 @@ public class UserController {
         }
         try {
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOAD_FOLDER + file.getOriginalFilename());
+            String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            Path path = Paths.get(UPLOAD_FOLDER + date + file.getOriginalFilename());
             //如果没有files文件夹，则创建
             if (!Files.isWritable(path)) {
                 Files.createDirectories(Paths.get(UPLOAD_FOLDER));
             }
             //文件写入指定路径
             Files.write(path, bytes);
-            return ResponseUtil.success("上传成功",file.getOriginalFilename());
+            return ResponseUtil.success("上传成功",date+file.getOriginalFilename());
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseUtil.fail("后端异常...");

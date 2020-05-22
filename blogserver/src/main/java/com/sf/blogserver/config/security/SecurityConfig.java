@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import java.io.PrintWriter;
 
@@ -52,9 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //普通管理员权限
                 .antMatchers("/category/admin/**", "/tag/admin/**").hasRole("ADMIN")
                 .antMatchers("/answer/common/**", "/article/common/**", "/category/common/**", "/comment/common/**",
-                        "/issue/common/**", "/tag/common/**", "/user/common/**", "/favorite/common/**", "/image/**").permitAll()
+                        "/issue/common/**", "/tag/common/**", "/user/common/**", "/favorite/common/**", "/image/**","/uploadImage").permitAll()
                 .anyRequest().authenticated()
-                .and().logout().permitAll()
+                .and()
+                .logout().permitAll()
                 .and().formLogin().loginPage("/tologin").loginProcessingUrl("/login")
                 .usernameParameter("username").passwordParameter("password").permitAll()
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> {

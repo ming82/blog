@@ -2,9 +2,11 @@ package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.User;
 import com.sf.blogserver.query.UserQuery;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface UserMapper {
     List<User> selectByQuery(UserQuery query);
 

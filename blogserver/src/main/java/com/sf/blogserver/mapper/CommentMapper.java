@@ -1,9 +1,11 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Comment;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface CommentMapper {
     int deleteByPrimaryKey(Integer commentId);
 

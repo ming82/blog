@@ -28,6 +28,7 @@
     from article
     where article_id = #{articleId,jdbcType=INTEGER}
   </select>
+<!--  根据文章的query类查询文章列表-->
   <select id="selectByQuery" parameterType="com.sf.blogserver.query.ArticleQuery" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -43,38 +44,7 @@
       and article_title like CONCAT('%',#{keyword},'%')
     </if>
   </select>
-  <select id="getHotArticles" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from article
-    where article_status = 1 and article_likes > 10
-    order by  publishDate desc limit 0,8
-  </select>
-  <select id="getNewArticles" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from article
-    where article_status = 1
-    order by  publishDate desc limit 0,8
-  </select>
-  <select id="selectByUserId" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from article
-    where article_status = 1 and user_id = #{userId,jdbcType=INTEGER}
-  </select>
-  <select id="getDraft" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from article
-    where article_status = 2 and user_id = #{userId,jdbcType=INTEGER}
-  </select>
-  <select id="selectByCategoryId" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from article
-    where article_status = 1 and category_id = #{categoryId,jdbcType=INTEGER}
-  </select>
+<!--  新增文章，若字段为空则不插入，并将文章主键返回-->
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="articleId" parameterType="com.sf.blogserver.vo.ArticleVo">
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -166,6 +136,7 @@
       </if>
     </trim>
   </insert>
+<!--  根据主键修改文章，若字段为空则不修改-->
   <update id="updateByPrimaryKeySelective" parameterType="com.sf.blogserver.vo.ArticleVo">
     update article
     <set>
@@ -211,11 +182,44 @@
     </set>
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
+<!--  将文章status修改为0，以此代替删除操作-->
   <update id="updateToDelete" parameterType="java.lang.Integer">
     update article
     set article_status = 0
     where article_id = #{articleId,jdbcType=INTEGER}
   </update>
+  <select id="getHotArticles" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1 and article_likes > 10
+    order by  publishDate desc limit 0,8
+  </select>
+  <select id="getNewArticles" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1
+    order by  publishDate desc limit 0,8
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1 and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="getDraft" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 2 and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCategoryId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from article
+    where article_status = 1 and category_id = #{categoryId,jdbcType=INTEGER}
+  </select>
   <update id="increaseComment" parameterType="java.lang.Integer">
     update article
     set article_comments = article_comments +'1'

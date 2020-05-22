@@ -1,9 +1,11 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Favorite;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface    FavoriteMapper {
     int deleteByPrimaryKey(Integer favoriteId);
 

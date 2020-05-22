@@ -1,9 +1,11 @@
 package com.sf.blogserver.mapper;
 
 import com.sf.blogserver.bean.Tag;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
+@Mapper
 public interface TagMapper {
     int deleteByPrimaryKey(Integer tagId);
 

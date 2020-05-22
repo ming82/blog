@@ -17,7 +17,7 @@
         <br>
         <br>
       </el-col>
-      <el-col :span="24" align="left" class="marginleft">
+      <el-col :span="24" align="left" style="padding: 0px 20px 0px 20px">
         <div v-html="issue.htmlcontent"></div>
       </el-col>
       <el-col align="left">
